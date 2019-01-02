@@ -5,6 +5,17 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
+Route::get('cache',function(){
+
+    Cache::put('abc',"ACCSASADASDC",2);
+//    dd(Cache::get('abc'));
+
+});
+
+Route::get('abc',function(){
+  dd(Cache::get('abc'));
+});
+
 //Route::get('nasms-count',function(){
 //    $time = Carbon::now()->subMinutes(5)->toDateTimeString();
 //
