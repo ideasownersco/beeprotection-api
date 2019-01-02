@@ -24,8 +24,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             if ($this->app->isLocal()) {
                 return true;
             }
-            return true;
 //            return true;
+            return false;
 
             return $entry->isReportableException() ||
                 $entry->isFailedJob();
