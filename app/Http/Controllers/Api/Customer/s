@@ -1,0 +1,28 @@
+##
+# Disable Unused Services
+###
+
+# 1. Beanstalkd
+
+sudo systemctl stop beanstalkd
+sudo systemctl disable beanstalkd
+
+# 2. Memcached
+
+sudo systemctl stop memcached
+sudo systemctl disable memcached
+
+# 3. Redis
+
+sudo systemctl stop redis
+sudo systemctl disable redis
+
+# 4. Nginx
+
+sudo systemctl stop nginx
+sudo systemctl disable nginx
+
+# 5. PHP-FPM
+
+sudo systemctl stop php7.2-fpm
+sudo systemctl disable php7.2-fpm

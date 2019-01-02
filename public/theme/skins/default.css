@@ -1,0 +1,158 @@
+/* ==============================================================
+
+Template name : Kelex-clean and modern landing page v1.0.0
+Categorie : Landing page
+Author : Nce18cex
+Version : v1.0.0
+Created : 05 March 2015
+Last update : 18 March 2015
+
+-----------------------------------------------------------------
+CSS structure
+-----------------------------------------------------------------
+
+01. Primary color
+    01.1. Color
+	01.2. Background color
+	01.3. Border color
+02. Secondary color
+    01.1. Background color
+	01.2. Border color
+	
+============================================================== */
+
+/*
+Primary color
+=========================== */
+
+/*
+Color
+--------------------------- */
+a,
+a:focus,
+a:hover,
+a:active,
+.btn-link,
+.btn-link:active,
+.btn-link:focus,
+.btn-link:hover,
+.btn-primary.btn-bordered,
+.navbar-default .navbar-nav > li.active > a,
+.navbar-default .navbar-nav > li.dropdown > a.dropdown-toggle:hover,
+.navbar-default .navbar-nav > li.dropdown > a.dropdown-toggle:focus,
+.navbar-default .navbar-nav > li.dropdown > a.dropdown-toggle:active,
+.navbar-default .navbar-nav > li > a:hover,
+.dropdown-menu li a:hover:hover,
+.navbar-default .navbar-nav li a:hover,
+.navbar-default .navbar-nav li a.selected,
+.navbar-default .navbar-nav .active a,
+.navbar-default .navbar-nav .dropdown.active a,
+.navbar-default .navbar-nav .active a:hover,
+.navbar-default .navbar-nav .dropdown.active a:hover,
+.navbar-default .navbar-nav .active a:focus,
+.navbar-default .navbar-nav .dropdown.active a:focus,
+.icon-services,
+.icon-features,
+.icon-color,
+.img-caption a:active,
+.img-caption a:focus,
+.img-caption a:hover,
+.filter li.active a,
+.filter li a:focus,
+.filter li a:active,
+.filter li a:hover,
+.heading h4,
+.recent-post h4 a:hover,
+.pricing-price,
+.validation,
+.home-cta h1 span,
+.standout-form h3 span,
+.team-leader,
+.pagination > li > a,
+.recent li h6 a:hover{
+	color:#45c8b3;
+}
+
+/*
+Background color
+--------------------------- */
+.btn-primary,
+.primary-section,
+.owl-theme .owl-controls .owl-buttons div:hover,
+.contact-info li i,
+div.pp_default .pp_close:hover,
+div.pp_default .pp_expand:hover,
+div.pp_default .pp_contract:hover,
+.img-caption .img-zoom,
+.img-caption .img-zoom:focus,
+.img-caption .img-zoom:active,
+.img-caption .img-link,
+.img-caption .img-link:focus,
+.img-caption .img-link:active,
+.search-btn,
+footer,
+.subscribe-btn,
+.box-column-wrapp,
+.parallax.bg3,
+.flex-control-paging li a.flex-active,
+.navbar-default .navbar-toggle:hover .icon-bar,
+#inner-heading,
+.tags li a:hover{
+	background-color:#45c8b3;
+}
+
+/*
+Border color
+--------------------------- */
+.btn-primary,
+.form-control:focus,
+ul.listForm li .form-control:focus,
+.navbar-default .navbar-toggle:hover,
+.tags li a:hover{
+	border-color:#45c8b3;
+}
+
+/*
+Secondary color
+=========================== */
+/*
+Background color
+--------------------------- */
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary,
+.btn-primary.btn-bordered:hover,
+.btn-primary.btn-bordered:focus,
+.btn-primary.btn-bordered.focus,
+.btn-primary.btn-bordered:active,
+.btn-primary.btn-bordered.active,
+.open > .dropdown-toggle.btn-primary.btn-bordered{
+	background-color:#41dbc2;
+	border-color:#41dbc2;
+	color:#fff;
+}
+
+.search-btn:hover,
+.img-caption .img-zoom:hover,
+.img-caption .img-link:hover{
+	background-color:#41dbc2;
+}
+
+/*
+Border color
+--------------------------- */
+.btn-primary.btn-bavel{
+	border-bottom-color:#34a996;
+}
+
+.btn-primary.btn-bavel:hover,
+.btn-primary.btn-bavel:focus,
+.btn-primary.btn-bavel.focus,
+.btn-primary.btn-bavel:active,
+.btn-primary.btn-bavel.active,
+.open > .dropdown-toggle.btn-primary.btn-bavel{
+	border-bottom-color:#35c4ad;
+}

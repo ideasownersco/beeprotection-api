@@ -1,0 +1,15 @@
+$ORIGIN beeprotection.net.
+$TTL 1800
+beeprotection.net. IN SOA ns1.digitalocean.com. hostmaster.beeprotection.net. 1540259939 10800 3600 604800 1800
+beeprotection.net. 300 IN NS ns1.digitalocean.com.
+beeprotection.net. 300 IN NS ns2.digitalocean.com.
+beeprotection.net. 300 IN NS ns3.digitalocean.com.
+beeprotection.net. 300 IN A 162.243.164.32
+beeprotection.net. 300 IN AAAA 2604:a880:400:d0::663:a001
+www.beeprotection.net. 300 IN CNAME beeprotection.net.
+beeprotection.net. 300 IN TXT 877x67g3d0cnc87lf4qz0ym06p9jjz1r
+mail.beeprotection.net. 300 IN A 162.241.244.67
+mail.beeprotection.net. 300 IN MX 0 162.241.244.67.
+beeprotection.net. 300 IN MX 0 162.241.244.67.
+
+

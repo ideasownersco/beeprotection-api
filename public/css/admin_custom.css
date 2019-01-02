@@ -1,0 +1,5 @@
+.form-control::-webkit-input-placeholder{color: #c6beba;opacity:1}  .form-control::-moz-placeholder{color:#c6beba;opacity:1}  .form-control:-ms-input-placeholder{color:#c6beba;opacity:1}  .form-control::-ms-input-placeholder{color: #c6beba;opacity:1}  .form-control::placeholder{color:#c6beba;opacity:1}
+
+#topnav .topbar-main {
+    background-color: #24558a;
+}
