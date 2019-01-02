@@ -8,7 +8,7 @@ use Fideloper\Proxy\TrustProxies as Middleware;
 class TrustProxies extends Middleware
 {
 //    protected $proxies = ['162.243.164.32'];
-    protected $proxies = ['167.99.233.51'];
+    protected $proxies = ['10.136.45.55'];
 
 
     /**
