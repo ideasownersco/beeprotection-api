@@ -158,8 +158,8 @@ class UsersController extends Controller
                 $user->image = $image;
                 $user->save();
             } catch (\Exception $e) {
-                $user->delete();
-                redirect()->back()->with('success','Users Could not be saved because The Image failed to Upload');
+//                $user->delete();
+                redirect()->back()->with('success','User saved but The Image failed to Upload');
             }
         }
 

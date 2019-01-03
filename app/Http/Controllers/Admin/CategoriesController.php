@@ -62,8 +62,8 @@ class CategoriesController extends Controller
                 $category->image = $image;
                 $category->save();
             } catch (\Exception $e) {
-                $category->delete();
-                redirect()->back()->with('success','Categories Could not be saved because the image failed to Upload');
+//                $category->delete();
+                redirect()->back()->with('success','Category saved but the image failed to Upload');
             }
         }
 
@@ -87,8 +87,7 @@ class CategoriesController extends Controller
                 $category->image = $image;
                 $category->save();
             } catch (\Exception $e) {
-                $category->delete();
-                redirect()->back()->with('success','Services Could not be saved because The Image failed to Upload');
+                redirect()->back()->with('success','Category saved but the image failed to Upload');
             }
         }
 

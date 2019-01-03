@@ -76,8 +76,7 @@ class ServicesController extends Controller
                 $service->image = $image;
                 $service->save();
             } catch (\Exception $e) {
-                $service->delete();
-                redirect()->back()->with('success','Services Could not be saved because The Image failed to Upload');
+                redirect()->back()->with('success','Services Saved but The Image failed to Upload');
             }
         }
         return redirect()->back()->with('success','Service Saved');
@@ -85,6 +84,7 @@ class ServicesController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $this->validate($request,[
             'name_en' => 'required',
             'name_ar' => 'required',
@@ -100,10 +100,11 @@ class ServicesController extends Controller
         if($request->hasFile('image')) {
             try {
                 $image = $this->uploadImage($request->image);
+                dd($image);
                 $service->image = $image;
                 $service->save();
             } catch (\Exception $e) {
-                $service->delete();
+                dd($e->getMessage());
                 redirect()->back()->with('success','Services Could not be saved because The Image failed to Upload');
             }
         }

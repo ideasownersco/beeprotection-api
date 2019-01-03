@@ -68,8 +68,8 @@ class PackagesController extends Controller
                 $package->image = $image;
                 $package->save();
             } catch (\Exception $e) {
-                $package->delete();
-                redirect()->back()->with('success','Services Could not be saved because The Image failed to Upload');
+//                $package->delete();
+                redirect()->back()->with('success','Package Savee but The Image failed to Upload');
             }
         }
         return redirect()->back()->with('success','Package Saved');
@@ -95,8 +95,7 @@ class PackagesController extends Controller
                 $package->image = $image;
                 $package->save();
             } catch (\Exception $e) {
-                $package->delete();
-                redirect()->back()->with('success','Services Could not be saved because The Image failed to Upload');
+                redirect()->back()->with('success','Package saved but The Image failed to Upload');
             }
         }
 

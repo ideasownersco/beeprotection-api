@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class Controller extends BaseController
 {
@@ -29,26 +30,42 @@ class Controller extends BaseController
 
     }
 
-    /**
-     * @param $image
-     * @return string
-     * @throws \Exception
-     */
+//    /**
+//     * @param $image
+//     * @return string
+//     * @throws \Exception
+//     */
+//    protected function uploadImage($image)
+//    {
+//        if (!$image->isValid()) {
+//            throw new \Exception('invalid image');
+//        }
+//
+//        $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
+//        $savePath = public_path() . self::UPLOAD_PATH . $imageName;
+//
+//        Image::make($image)->save($savePath, 80);
+//
+//        $fullImagePath = app()->make('url')->to(self::UPLOAD_PATH . $imageName);
+//
+//        return $fullImagePath;
+//
+//    }
+
     protected function uploadImage($image)
     {
-        if (!$image->isValid()) {
-            throw new \Exception('invalid image');
+        if ($image->isValid()) {
+
+            $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
+
+            Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
+
+            $fullImagePath = $imageName;
+
+            return $fullImagePath;
         }
 
-        $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
-        $savePath = public_path() . self::UPLOAD_PATH . $imageName;
-
-        Image::make($image)->save($savePath, 80);
-
-        $fullImagePath = app()->make('url')->to(self::UPLOAD_PATH . $imageName);
-
-        return $fullImagePath;
-
     }
+
 
 }
