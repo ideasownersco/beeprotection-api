@@ -35,7 +35,6 @@ Route::get('aws',function(){
 //    }
 });
 
-
 Route::get('pack',function(){
 
     $services = \App\Models\Service::doesntHave('package')->get();
@@ -47,6 +46,37 @@ Route::get('pack',function(){
 
     dd($services->count());
 });
+
+Route::get('pack',function(){
+
+//    $services = \App\Models\Service::has('package')->get();
+//
+//    foreach ($services as $service) {
+//
+////        $image = base_path('uploads/'.$service->image);
+//        $image = $service->image;
+//
+//        $url = parse_url($image);
+//
+//        $path = public_path($url['path']);
+//
+//        if(file_exists($path)) {
+//
+//            $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
+//
+//            Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
+//            $image = 'beeprotection/'.$imageName;
+//            $fullImagePath = Storage::disk('s3')->url($image);
+//
+//            return $fullImagePath;
+//
+//        } else {
+//            echo $path . '<br>';
+//        }
+//
+//    }
+});
+
 
 //Route::get('nasms-count',function(){
 //    $time = Carbon::now()->subMinutes(5)->toDateTimeString();
