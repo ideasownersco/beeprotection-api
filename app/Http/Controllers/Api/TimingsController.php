@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TimingResource;
 use App\Models\Driver;
+use App\Models\Holiday;
 use App\Models\Order;
 use App\Models\Package;
 use App\Models\Service;
@@ -35,6 +36,10 @@ class TimingsController extends Controller
      * @var Driver
      */
     private $driverModel;
+    /**
+     * @var Holiday
+     */
+    private $holidayModel;
 
     /**
      * @param Timing $timingModel
@@ -42,14 +47,16 @@ class TimingsController extends Controller
      * @param Service $serviceModel
      * @param Order $orderModel
      * @param Driver $driverModel
+     * @param Holiday $holidayModel
      */
-    public function __construct(Timing $timingModel, Package $packageModel, Service $serviceModel, Order $orderModel, Driver $driverModel)
+    public function __construct(Timing $timingModel, Package $packageModel, Service $serviceModel, Order $orderModel, Driver $driverModel, Holiday $holidayModel)
     {
         $this->timingModel = $timingModel;
         $this->packageModel = $packageModel;
         $this->serviceModel = $serviceModel;
         $this->orderModel = $orderModel;
         $this->driverModel = $driverModel;
+        $this->holidayModel = $holidayModel;
     }
 
     public function index(Request $request)
@@ -72,15 +79,74 @@ class TimingsController extends Controller
 
         $isToday = Carbon::parse($orderDate)->isToday();
 
-        if ($request->free_wash) {
 
-            $dateMax = Carbon::createFromDate('2019','1','14');
+        $isHoliday = $this->holidayModel->whereDate('date',$orderDate)->first();
 
-            if(Carbon::parse($orderDate)->gt($dateMax)) {
-                foreach ($timings as $timing) {
-                    $timing['disabled'] = true;
+        if($isHoliday) {
+            foreach ($timings as $timing) {
+                $timing['disabled'] = true;
+            }
+        } else {
+            if ($request->free_wash) {
+
+                $dateMax = Carbon::createFromDate('2019','1','14');
+
+                if(Carbon::parse($orderDate)->gt($dateMax)) {
+                    foreach ($timings as $timing) {
+                        $timing['disabled'] = true;
+                    }
+                } else {
+                    foreach ($timings as $timing) {
+                        try {
+                            $orderDateTime = Carbon::parse($orderDate . ' ' . $timing->name_en);
+
+                            if($isToday) {
+                                $timing['disabled'] = $orderDateTime->lt(Carbon::now()->addMinutes(29));
+                            }
+
+                            if(!$timing['disabled']) {
+                                $orderDuration = $this->orderModel->calculateDuration($timing->name_en, $packageDuration, $serviceDuration,true);
+
+                                $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
+
+                                if(!($workingFinishingHour >= 9 && $workingFinishingHour <= 23)) {
+                                    $timing['disabled'] = true;
+                                } else {
+                                    $hasFreeDriver = $this->driverModel->getAvailableDriver($orderDate, $timing->name_en, $orderDuration);
+                                    $timing['disabled'] = $hasFreeDriver ? false : true;
+                                }
+
+                            }
+                        } catch (\Exception $e) {
+                            return response()->json(['success' => false, 'message' => 'some error occured']);
+                        };
+                        $timing['isDay'] = Carbon::parse($timing->name_en)->format('H') < 18;
+                    }
+
                 }
             } else {
+
+                // If not free wash
+                foreach ($request->items as $item) {
+                    if (array_key_exists('package', $item)) {
+                        $package = $this->packageModel->find($item['package']);
+                        if ($package) {
+                            $hourDuration = 1;
+                            if (isset($item['quantity']) && $item['quantity'] > 1) {
+                                $hourDuration = $this->getPackageQuantityHours($item['quantity']);
+                            }
+                            $packageDuration += $package->duration * $hourDuration;
+                        } else {
+                            $packageDuration += $package->duration;
+                        }
+                    }
+
+                    if (array_key_exists('services', $item)) {
+                        $serviceDurations = $this->serviceModel->whereIn('id', $item['services'])->sum('duration');
+                        $serviceDuration += $serviceDurations;
+                    }
+                }
+
                 foreach ($timings as $timing) {
                     try {
                         $orderDateTime = Carbon::parse($orderDate . ' ' . $timing->name_en);
@@ -90,10 +156,10 @@ class TimingsController extends Controller
                         }
 
                         if(!$timing['disabled']) {
-                            $orderDuration = $this->orderModel->calculateDuration($timing->name_en, $packageDuration, $serviceDuration,true);
+                            $orderDuration = $this->orderModel->calculateDuration($timing->name_en,$packageDuration, $serviceDuration,false);
 
+                            // Check if Order end time crosses maximum limit of working hour for driver. i.e 11PM
                             $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
-
                             if(!($workingFinishingHour >= 9 && $workingFinishingHour <= 23)) {
                                 $timing['disabled'] = true;
                             } else {
@@ -102,63 +168,14 @@ class TimingsController extends Controller
                             }
 
                         }
+
                     } catch (\Exception $e) {
                         return response()->json(['success' => false, 'message' => 'some error occured']);
                     };
+
                     $timing['isDay'] = Carbon::parse($timing->name_en)->format('H') < 18;
+
                 }
-
-            }
-        } else {
-
-            // If not free wash
-            foreach ($request->items as $item) {
-                if (array_key_exists('package', $item)) {
-                    $package = $this->packageModel->find($item['package']);
-                    if ($package) {
-                        $hourDuration = 1;
-                        if (isset($item['quantity']) && $item['quantity'] > 1) {
-                            $hourDuration = $this->getPackageQuantityHours($item['quantity']);
-                        }
-                        $packageDuration += $package->duration * $hourDuration;
-                    } else {
-                        $packageDuration += $package->duration;
-                    }
-                }
-
-                if (array_key_exists('services', $item)) {
-                    $serviceDurations = $this->serviceModel->whereIn('id', $item['services'])->sum('duration');
-                    $serviceDuration += $serviceDurations;
-                }
-            }
-
-            foreach ($timings as $timing) {
-                try {
-                    $orderDateTime = Carbon::parse($orderDate . ' ' . $timing->name_en);
-
-                    if($isToday) {
-                        $timing['disabled'] = $orderDateTime->lt(Carbon::now()->addMinutes(29));
-                    }
-
-                    if(!$timing['disabled']) {
-                        $orderDuration = $this->orderModel->calculateDuration($timing->name_en,$packageDuration, $serviceDuration,false);
-
-                        // Check if Order end time crosses maximum limit of working hour for driver. i.e 11PM
-                        $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
-                        if(!($workingFinishingHour >= 9 && $workingFinishingHour <= 23)) {
-                            $timing['disabled'] = true;
-                        } else {
-                            $hasFreeDriver = $this->driverModel->getAvailableDriver($orderDate, $timing->name_en, $orderDuration);
-                            $timing['disabled'] = $hasFreeDriver ? false : true;
-                        }
-
-                    }
-
-                } catch (\Exception $e) {
-                    return response()->json(['success' => false, 'message' => 'some error occured']);
-                };
-
-                $timing['isDay'] = Carbon::parse($timing->name_en)->format('H') < 18;
 
             }
 
