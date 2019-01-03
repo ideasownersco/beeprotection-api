@@ -5,15 +5,16 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
-Route::get('cache',function(){
+Route::get('pack',function(){
 
-    Cache::put('abc',"ACCSASADASDC",2);
-//    dd(Cache::get('abc'));
+    $services = \App\Models\Service::doesntHave('package')->get();
 
-});
+    foreach ($services as $service) {
+        $service->delete();
+//        dd($service->delete());
+    }
 
-Route::get('abc',function(){
-  dd(Cache::get('abc'));
+    dd($services->count());
 });
 
 //Route::get('nasms-count',function(){
