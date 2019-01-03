@@ -58,7 +58,8 @@ class CategoriesController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+//                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('categories');
                 $category->image = $image;
                 $category->save();
             } catch (\Exception $e) {
@@ -83,7 +84,8 @@ class CategoriesController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+//                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('categories');
                 $category->image = $image;
                 $category->save();
             } catch (\Exception $e) {

@@ -64,11 +64,10 @@ class PackagesController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('packages');
                 $package->image = $image;
                 $package->save();
             } catch (\Exception $e) {
-//                $package->delete();
                 redirect()->back()->with('success','Package Savee but The Image failed to Upload');
             }
         }
@@ -91,7 +90,7 @@ class PackagesController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('packages');
                 $package->image = $image;
                 $package->save();
             } catch (\Exception $e) {

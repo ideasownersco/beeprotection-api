@@ -30,41 +30,36 @@ class Controller extends BaseController
 
     }
 
-//    /**
-//     * @param $image
-//     * @return string
-//     * @throws \Exception
-//     */
-//    protected function uploadImage($image)
-//    {
-//        if (!$image->isValid()) {
-//            throw new \Exception('invalid image');
-//        }
-//
-//        $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
-//        $savePath = public_path() . self::UPLOAD_PATH . $imageName;
-//
-//        Image::make($image)->save($savePath, 80);
-//
-//        $fullImagePath = app()->make('url')->to(self::UPLOAD_PATH . $imageName);
-//
-//        return $fullImagePath;
-//
-//    }
-
+    /**
+     * @param $image
+     * @return string
+     * @throws \Exception
+     */
     protected function uploadImage($image)
     {
-        if ($image->isValid()) {
-
-            $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
-
-            Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
-
-            $fullImagePath = $imageName;
-
-            return $fullImagePath;
+        if (!$image->isValid()) {
+            throw new \Exception('invalid image');
         }
 
+        $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
+        $savePath = public_path() . self::UPLOAD_PATH . $imageName;
+
+        Image::make($image)->save($savePath, 80);
+
+        $fullImagePath = app()->make('url')->to(self::UPLOAD_PATH . $imageName);
+
+        return $fullImagePath;
+
+    }
+
+    protected function uploadAWSImage($image)
+    {
+        $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
+        Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
+        $image = 'beeprotection.net/'.$imageName;
+        $fullImagePath = Storage::disk('s3')->url($image);
+
+        return $fullImagePath;
     }
 
 

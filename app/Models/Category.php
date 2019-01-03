@@ -12,4 +12,9 @@ class Category extends BaseModel
         return $this->hasMany(Package::class);
     }
 
+    public function getImageAttribute()
+    {
+        return $this->getImage($this->attributes['image']);
+    }
+
 }

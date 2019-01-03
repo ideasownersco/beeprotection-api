@@ -132,7 +132,7 @@ class DriversController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('users');
                 $user->image = $image;
                 $user->save();
             } catch (\Exception $e) {
@@ -182,7 +182,7 @@ class DriversController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('users');
                 $user->image = $image;
                 $user->save();
             } catch (\Exception $e) {

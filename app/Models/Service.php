@@ -17,4 +17,9 @@ class Service extends BaseModel
         return $this->belongsToMany(Order::class,'order_services');
     }
 
+//    public function getImageAttribute()
+//    {
+//        return $this->getImage($this->attributes['image']);
+//    }
+
 }

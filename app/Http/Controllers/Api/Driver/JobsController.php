@@ -180,7 +180,9 @@ class JobsController extends Controller
         if(count($images)) {
             try {
                 foreach ($images as $image) {
-                    $uploadedImage = $this->uploadImage($image);
+//                    $uploadedImage = $this->uploadImage($image);
+                    $uploadedImage = $image->store('jobs');
+//                    $uploadedImage = $request->file($image)->store('jobs');
                     $uploadedImages[] = ['url'=>$uploadedImage];
                 }
                 $job->photos()->createMany($uploadedImages);

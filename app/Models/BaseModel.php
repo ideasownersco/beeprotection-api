@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class BaseModel extends Model
 {
@@ -32,4 +33,9 @@ class BaseModel extends Model
         $query->where('active', 1);
     }
 
+    public function getImage($image)
+    {
+        $image = config('filesystems.disks.s3.bucket').'/'.$image;
+        return Storage::disk('s3')->url($image);
+    }
 }

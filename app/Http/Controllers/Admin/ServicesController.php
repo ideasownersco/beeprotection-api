@@ -98,15 +98,9 @@ class ServicesController extends Controller
         $service->update($request->all());
 
         if($request->hasFile('image')) {
-            try {
-                $image = $this->uploadImage($request->image);
-                dd($image);
-                $service->image = $image;
-                $service->save();
-            } catch (\Exception $e) {
-                dd($e->getMessage());
-                redirect()->back()->with('success','Services Could not be saved because The Image failed to Upload');
-            }
+            $image = $request->file('image')->store('services');
+            $service->image = $image;
+            $service->save();
         }
 
         return redirect()->back()->with('success','Service Updated');
