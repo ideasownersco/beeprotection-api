@@ -5,7 +5,7 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
-Route::get('pack',function(){
+Route::get('aws',function(){
 
 //    $services = \App\Models\Service::has('package')->get();
 //
@@ -33,6 +33,19 @@ Route::get('pack',function(){
 //        }
 //
 //    }
+});
+
+
+Route::get('pack',function(){
+
+    $services = \App\Models\Service::doesntHave('package')->get();
+
+    foreach ($services as $service) {
+        $service->delete();
+//        dd($service->delete());
+    }
+
+    dd($services->count());
 });
 
 //Route::get('nasms-count',function(){
