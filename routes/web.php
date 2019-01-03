@@ -5,6 +5,13 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
+Route::get('o',function(){
+
+    $order = Order::find(20738);
+
+    dd($order->create());
+});
+
 Route::get('aws',function(){
 
 //    $services = \App\Models\Service::has('package')->get();

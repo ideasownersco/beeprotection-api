@@ -155,10 +155,11 @@ class Order extends BaseModel
      * @param null $orderTime
      * @param null $packageDuration
      * @param null $serviceDuration
-     * @return string
+     * @param bool $freeWash
      * Calulcate Total Duration
+     * @return string
      */
-    public function calculateDuration($orderTime = null,$packageDuration = null,$serviceDuration = null)
+    public function calculateDuration($orderTime = null,$packageDuration = null,$serviceDuration = null,$freeWash = false)
     {
         $order = $this;
         $packageDuration = $packageDuration ? $packageDuration : $order->packages->sum('duration');
@@ -176,8 +177,8 @@ class Order extends BaseModel
 
         $orderTime = $orderTime ? $orderTime : $order->time;
 
-        if($order->free_wash) {
-            $totalDuration += 15;
+        if($freeWash) {
+            $totalDuration += 14;
         }
 
         $duration = Carbon::parse($orderTime)->addMinutes($totalDuration)->toTimeString();

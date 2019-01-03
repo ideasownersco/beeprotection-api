@@ -90,12 +90,9 @@ class TimingsController extends Controller
                         }
 
                         if(!$timing['disabled']) {
-                            $orderDuration = $this->orderModel->calculateDuration($timing->name_en, $packageDuration, $serviceDuration);
+                            $orderDuration = $this->orderModel->calculateDuration($timing->name_en, $packageDuration, $serviceDuration,true);
 
-                            $workingFinishingHour = Carbon::parse($orderDate . $orderDuration);
-
-                            // to fix JS bug that breaks table if time crossed 12AM
-                            $workingFinishingHour = $workingFinishingHour->format('H');
+                            $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
 
                             if(!($workingFinishingHour >= 9 && $workingFinishingHour <= 23)) {
                                 $timing['disabled'] = true;
@@ -144,7 +141,7 @@ class TimingsController extends Controller
                     }
 
                     if(!$timing['disabled']) {
-                        $orderDuration = $this->orderModel->calculateDuration($timing->name_en, $packageDuration, $serviceDuration);
+                        $orderDuration = $this->orderModel->calculateDuration($timing->name_en,$packageDuration, $serviceDuration,false);
 
                         // Check if Order end time crosses maximum limit of working hour for driver. i.e 11PM
                         $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
