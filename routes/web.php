@@ -5,6 +5,17 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
+Route::get('redis',function(){
+    $data = [
+        'event' => 'UserSignedUp',
+        'payload' => [
+            'user' => 'Afzal'
+        ]
+    ] ;
+
+    Redis::publish('test-channel',json_encode($data));
+});
+
 Route::get('o',function(){
 
     $order = Order::find(20738);
@@ -134,7 +145,7 @@ Route::get('activate_users',function(){
     $time = Carbon::now()->subMinutes(10)->toDateTimeString();
 
     $users = User::
-        where('active',0)
+    where('active',0)
         ->where('created_at','<',$time)
         ->take(10)
         ->get()
