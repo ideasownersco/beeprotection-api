@@ -34,9 +34,9 @@ var users = [];
 io.on('connection', function (socket) {
   console.log('connected',socket.id);
 
-  socket.on('*', function(packet){
-    console.log('packet',packet);
-  });
+  // socket.on('*', function(packet){
+  //   console.log('packet',packet);
+  // });
 
   socket.on('user.connected', function (userID) {
     users.indexOf(userID) === -1 && users.push(userID);
