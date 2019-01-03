@@ -177,8 +177,8 @@ class Order extends BaseModel
 
         $orderTime = $orderTime ? $orderTime : $order->time;
 
-        if($freeWash) {
-            $totalDuration += 14;
+        if($freeWash ||  $order->free_wash) {
+            $totalDuration += 15;
         }
 
         $duration = Carbon::parse($orderTime)->addMinutes($totalDuration)->toTimeString();

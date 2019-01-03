@@ -79,7 +79,6 @@ class TimingsController extends Controller
 
         $isToday = Carbon::parse($orderDate)->isToday();
 
-
         $isHoliday = $this->holidayModel->whereDate('date',$orderDate)->first();
 
         if($isHoliday) {
@@ -106,7 +105,6 @@ class TimingsController extends Controller
 
                             if(!$timing['disabled']) {
                                 $orderDuration = $this->orderModel->calculateDuration($timing->name_en, $packageDuration, $serviceDuration,true);
-
                                 $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
 
                                 if(!($workingFinishingHour >= 9 && $workingFinishingHour <= 23)) {
