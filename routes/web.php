@@ -5,141 +5,6 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
-Route::get('redis',function(){
-    $data = [
-        'event' => 'UserSignedUp',
-        'payload' => [
-            'user' => 'Afzal'
-        ]
-    ] ;
-
-    Redis::publish('test-channel',json_encode($data));
-});
-
-Route::get('o',function(){
-
-    $order = Order::find(20738);
-
-    dd($order->create());
-});
-
-Route::get('aws',function(){
-
-//    $services = \App\Models\Service::has('package')->get();
-//
-//    foreach ($services as $service) {
-//
-////        $image = base_path('uploads/'.$service->image);
-//        $image = $service->image;
-//
-//        $url = parse_url($image);
-//
-//        $path = public_path($url['path']);
-//
-//        if(file_exists($path)) {
-//
-//            $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
-//
-//            Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
-//            $image = 'beeprotection/'.$imageName;
-//            $fullImagePath = Storage::disk('s3')->url($image);
-//
-//            return $fullImagePath;
-//
-//        } else {
-//            echo $path . '<br>';
-//        }
-//
-//    }
-});
-
-Route::get('pack',function(){
-
-    $services = \App\Models\Service::doesntHave('package')->get();
-
-    foreach ($services as $service) {
-        $service->delete();
-//        dd($service->delete());
-    }
-
-    dd($services->count());
-});
-
-Route::get('pack',function(){
-
-//    $services = \App\Models\Service::has('package')->get();
-//
-//    foreach ($services as $service) {
-//
-////        $image = base_path('uploads/'.$service->image);
-//        $image = $service->image;
-//
-//        $url = parse_url($image);
-//
-//        $path = public_path($url['path']);
-//
-//        if(file_exists($path)) {
-//
-//            $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
-//
-//            Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
-//            $image = 'beeprotection/'.$imageName;
-//            $fullImagePath = Storage::disk('s3')->url($image);
-//
-//            return $fullImagePath;
-//
-//        } else {
-//            echo $path . '<br>';
-//        }
-//
-//    }
-});
-
-
-//Route::get('nasms-count',function(){
-//    $time = Carbon::now()->subMinutes(5)->toDateTimeString();
-//
-//    $users = User::where('active',0)
-//        ->orWhereNotNull('registration_code')
-//        ->whereDate('created_at','<',$time)
-//        ->get(['mobile','id','email'])
-//    ;
-//    foreach ($users as $user) {
-//        echo $user->id . ' : ' . $user->mobile . ' : ' . $user->email;
-//        echo "<br>";
-//    }
-//});
-
-//Route::get('nasms',function(){
-//
-//    $time = Carbon::now()->subMinutes(5)->toDateTimeString();
-//    $users = User::where('active',0)
-//        ->orWhereNotNull('registration_code')
-//        ->whereDate('created_at','<',$time)
-//        ->take(50)
-//        ->get()
-//    ;
-//
-//    foreach ($users as $user) {
-//
-//        $user->registration_code = null;
-//        $user->save();
-//
-//        if(app()->env === 'production') {
-//            try {
-//                event(new UserActivatedSMS($user));
-//            } catch (\Exception $e) {
-//                $user->active = 0;
-//                $user->save();
-//                $message = $user->id .' : '. $e->getMessage();
-////                Log::info($message);
-//            }
-//        }
-//    }
-//
-//    dd($users->count());
-//});
-
 Route::get('activate_users',function(){
 
     $time = Carbon::now()->subMinutes(10)->toDateTimeString();
@@ -164,8 +29,6 @@ Route::get('activate_users',function(){
             } catch (\Exception $e) {
                 $user->active = 0;
                 $user->save();
-                $message = $user->id .' : '. $e->getMessage();
-//                Log::info($message);
             }
         }
     }
@@ -203,34 +66,10 @@ Route::get('activate_users',function(){
 //
 //});
 
-//Route::get('areacount',function(){
-//    $areas = Area::withCount(['orders'=>function($q){
-//        $q->success();
-//    }])->orderBy('orders_count','DESC')->paginate(10);
-//
-//    foreach ($areas as $area) {
-//        echo nl2br($area->name . ' : ' . $area->orders_count) ."<br>";
-//    }
-//});
-
-//Route::get('usercount',function(){
-//
-//    $users = User::with(['orders'=>function($q){
-//        $q->where('free_wash',1);
-//    }])->withCount(['orders'=>function($q){
-//        $q->success();
-//    }])->orderBy('orders_count','DESC')->paginate(10);
-//
-//    foreach ($users as $user) {
-//        echo nl2br($user->id . ' : ' . $user->orders_count) ."<br>";
-//    }
-////    dd($users->toArray());
-//});
-
 Route::get('purge',function() {
     // delete all invalid orders
     $date = \Carbon\Carbon::yesterday()->toDateString();
-    $orders = Order::where('status','!=','success')->whereDate('date','<',$date)->get();
+    $orders = Order::where('status','!=','success')->whereDate('date','<=',$date)->paginate(500);
 
     foreach ($orders as $order) {
 
@@ -263,7 +102,9 @@ Route::get('purge',function() {
         $order->delete();
     }
 
-    dd($orders->count());
+    $orders = Order::where('status','!=','success')->whereDate('date','<=',$date)->count();
+
+    dd($orders);
 
 });
 
