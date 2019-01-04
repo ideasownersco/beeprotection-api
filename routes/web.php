@@ -69,7 +69,7 @@ Route::get('activate_users',function(){
 Route::get('purge',function() {
     // delete all invalid orders
     $date = \Carbon\Carbon::yesterday()->toDateString();
-    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->get();
+    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->paginate(500);
 
     foreach ($orders as $order) {
 
