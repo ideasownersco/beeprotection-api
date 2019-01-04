@@ -66,7 +66,46 @@ Route::get('activate_users',function(){
 //
 //});
 
-Route::get('purge',function() {
+
+Route::get('purge_jobs',function() {
+
+    $jobs = \App\Models\Job::doesntHave('order')->get();
+
+    foreach ($jobs as $job) {
+        $job->delete();
+    }
+});
+
+Route::get('purge_blocked_dates',function (){
+
+    $date = \Carbon\Carbon::yesterday()->toDateString();
+
+    $dates = \App\Models\BlockedDate::where('date','<=',$date)->paginate(100);
+
+    foreach ($dates as $date) {
+        $date->delete();
+    }
+
+    $dates = \App\Models\BlockedDate::where('date','<=',$date)->count();
+
+    dd($dates);
+});
+Route::get('purge_job_counts',function (){
+
+    $date = \Carbon\Carbon::yesterday()->toDateString();
+
+    $dates = \App\Models\JobCount::where('date','<=',$date)->paginate(100);
+
+    foreach ($dates as $date) {
+        $date->delete();
+    }
+
+    $dates = \App\Models\JobCount::where('date','<=',$date)->count();
+
+    dd($dates);
+});
+
+Route::get('purge_orders',function() {
     // delete all invalid orders
     $date = \Carbon\Carbon::yesterday()->toDateString();
     $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->paginate(200);
@@ -74,22 +113,11 @@ Route::get('purge',function() {
     foreach ($orders as $order) {
 
         if($order->job) {
-            $driver = optional($order->job)->driver;
-
-            if($driver) {
-                $jobCount = $driver->job_counts()->where('date',$order->date)->first();
-
-                if($jobCount) {
-                    $jobCount->decrement('count');
-                }
-            }
-
             $order->job()->delete();
         }
-
-        if($order->blocked_date) {
-            $order->blocked_date()->delete();
-        }
+//        if($order->blocked_date) {
+//            $order->blocked_date()->delete();
+//        }
 
         if($order->packages->count()) {
             $order->packages()->sync([]);
@@ -101,8 +129,6 @@ Route::get('purge',function() {
 
         $order->delete();
     }
-
-//    $orders = Order::where('status','!=','success')->whereDate('date','<=',$date)->paginate(500);
 
     $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->count();
 
