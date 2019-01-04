@@ -74,6 +74,10 @@ Route::get('purge_jobs',function() {
     foreach ($jobs as $job) {
         $job->delete();
     }
+
+    $jobs = \App\Models\Job::doesntHave('order')->count();
+
+    dd($jobs);
 });
 
 Route::get('purge_blocked_dates',function (){
@@ -115,9 +119,6 @@ Route::get('purge_orders',function() {
         if($order->job) {
             $order->job()->delete();
         }
-//        if($order->blocked_date) {
-//            $order->blocked_date()->delete();
-//        }
 
         if($order->packages->count()) {
             $order->packages()->sync([]);
