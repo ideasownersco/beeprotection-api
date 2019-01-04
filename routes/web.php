@@ -102,7 +102,7 @@ Route::get('purge',function() {
         $order->delete();
     }
 
-    $orders = Order::where('status','!=','success')->whereDate('date','<=',$date)->count();
+    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->count();
 
     dd($orders);
 
