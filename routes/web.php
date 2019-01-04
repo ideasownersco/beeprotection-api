@@ -5,6 +5,14 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
+Route::get('invalid_orders',function (){
+
+    $orders = Order::doesntHave('job')->get();
+
+    dd($orders->pluck('id')->toArray());
+
+});
+
 Route::get('activate_users',function(){
 
     $time = Carbon::now()->subMinutes(10)->toDateTimeString();
@@ -110,7 +118,7 @@ Route::get('purge_job_counts',function (){
 });
 
 Route::get('purge_orders',function() {
-    // delete all invalid orders
+
     $date = \Carbon\Carbon::yesterday()->toDateString();
     $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->paginate(200);
 

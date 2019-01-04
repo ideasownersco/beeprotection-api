@@ -15,4 +15,9 @@ class BlockedDate extends BaseModel
         return $this->belongsTo(Driver::class);
     }
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
 }
