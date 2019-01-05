@@ -75,6 +75,7 @@ class ServicesController extends Controller
                 $image = $this->uploadImage($request->image);
                 $service->image = $image;
                 $service->save();
+
             } catch (\Exception $e) {
                 redirect()->back()->with('success','Services Saved but The Image failed to Upload');
             }

@@ -147,7 +147,12 @@ class JobsController extends Controller
 
         $driver = $job->driver;
 
-        $driver->update(['latitude' => $coords['latitude'],'longitude' => $coords['longitude']]);
+        $cacheKey = 'job_id_'.$jobID;
+
+        if(!Cache::has($cacheKey)) {
+            Cache::set($cacheKey,uniqid(),10);
+            $driver->update(['latitude' => $coords['latitude'],'longitude' => $coords['longitude']]);
+        }
 
         return response()->json(['success'=>true,'data'=>$payload]);
     }

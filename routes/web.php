@@ -5,6 +5,24 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 
+Route::get('redis',function (){
+
+    $jobID = 1;
+
+    $cacheKey = 'job_id_'.$jobID;
+
+    if(!Cache::has($cacheKey)) {
+//        dd('wa');
+//        $driver->update(['latitude' => $coords['latitude'],'longitude' => $coords['longitude']]);
+        Cache::set($cacheKey,uniqid(),1);
+    }
+    dd(Cache::get($cacheKey));
+    dd('s');
+//    Cache::put('knet','KNET VALUE 1',1);
+//    dd(Cache::get('knet'));
+
+});
+
 Route::get('invalid_orders',function (){
 
     $orders = Order::doesntHave('job')->get();
