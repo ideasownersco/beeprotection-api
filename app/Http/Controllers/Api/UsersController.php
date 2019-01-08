@@ -181,7 +181,7 @@ class UsersController extends Controller
             ]);
         }
 
-        if(!$pushToken->push_id) {
+        if(!$pushToken->user_id) {
             try {
                 $player = OneSignalFacade::createPlayer(['device_type' => $request->os === 'ios' ? 0 : 1,'identifier' => $request->token]);
 
