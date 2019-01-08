@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api\Customer;
 
-use App\Core\GoogleMapsGeocoder;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AddressResource;
-use App\Http\Resources\OrdersResource;
 use App\Http\Resources\UserResource;
 use App\Models\Address;
 use App\Models\Area;
@@ -68,8 +66,6 @@ class AddressesController extends Controller
 
         $collection = collect(json_decode($response))->flatten();
 
-//        dd($collection);
-
         $longNames = $collection->pluck('address_components')->flatten()->pluck('long_name');
 
         $block = '';
@@ -104,8 +100,6 @@ class AddressesController extends Controller
             }
         }
 
-//        dd($address);
-
         $address->block = $block;
         $address->street = $street;
 
@@ -127,7 +121,7 @@ class AddressesController extends Controller
 
         if(!$address->area) {
             $address->delete();
-            return response()->json(['message' => 'We dont deliver our services to this address yet.', 'success' => false]);
+            return response()->json(['message' => 'We are not delivering our services to this address yet.', 'success' => false]);
         }
 
         return response()->json(['data' => new UserResource($user), 'success' => true,'address_id'=>$address->id, 'address' => $address->area ? new AddressResource($address) : null,]);
@@ -179,16 +173,6 @@ class AddressesController extends Controller
 
         $user = Auth::guard('api')->user();
 
-//        $user->addresses = [(new AddressResource($address))->additional(['deleted'=>true])];
-//        $user->addresses = [$address];
-
-//        $user->load(['addresses'=>function($q) {
-//            $q->has('area');
-//        }]);
-
-//        $data = (new UserResource($user))->additional(['addresses' => [(new AddressResource($address))->additional(['deleted'=>true])] ]);
-
-//        return response()->json(['data' => $data, 'success' => true]);
         return response()->json(['data' => $user, 'success' => true, 'address_id' => $address->id]);
     }
 }

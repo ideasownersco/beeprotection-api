@@ -62,8 +62,6 @@ class HomeController extends Controller
 
         $activeDate = $request->date ? Carbon::parse($request->date)->format('d M') : Carbon::now()->format('d M');
 
-//        dd($activeDate);
-
         $queryDate = Carbon::parse($activeDate)->toDateString();
 
         /**
@@ -136,11 +134,11 @@ class HomeController extends Controller
 
             return [
                 'id' => $order->id,
-                'name' => $order->id . ': '.$order->address->area->name,
-                'driver' => $order->job->driver->user->name,
+                'name' => $order->id . ': '.optional(optional($order->address)->area)->name,
+                'driver' => optional(optional(optional($order->job)->driver)->user)->name,
                 'from' => Carbon::parse($order->date . $order->time)->toDateTimeString(),
                 'to' => $to->toDateTimeString(),
-                'class' => $order->job->button_name
+                'class' => optional($order->job)->button_name
             ];
         })->toJson();
 

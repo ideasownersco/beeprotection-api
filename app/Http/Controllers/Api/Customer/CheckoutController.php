@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Customer;
 
-use App\Events\OrderCreated;
 use App\Exceptions\DriversNotAvailableException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrdersResource;
