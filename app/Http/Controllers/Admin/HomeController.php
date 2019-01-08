@@ -48,6 +48,7 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -90,7 +91,6 @@ class HomeController extends Controller
             ->with(['job.driver.user','address.area','services','packages.category','user'])
             ->success()
             ->whereDate('date',$queryDate)
-//            ->orderBy('appointment_time','ASC')
             ->orderBy('date', 'asc')
             ->orderBy('time', 'asc')
             ->oldest()

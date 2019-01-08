@@ -96,6 +96,10 @@ class UsersController extends Controller
 
     public function hasFreeWash(Request $request)
     {
+
+        // No more free washes
+        return response()->json(['success'=>false,'has_free_wash' => true]);
+
         if(!$request->uuid) {
             return response()->json(['success'=>false,'message'=>'Invalid Device ID']);
         }
