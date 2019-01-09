@@ -182,13 +182,9 @@ Route::post('knet-pay',function () {
         $knetGateway->setTrackId($order->id);
         $knetGateway->requestPayment();
         $paymentURL = $knetGateway->getPaymentURL();
-        $order->payment_id = $knetGateway->getPaymentID();
-        $order->status = 'checkout';
         $order->save();
         return redirect()->away($paymentURL);
     } catch (\Exception $e) {
-        $order->status = 'error';
-        $order->save();
         return response()->json(['success'=>false,'error', 'حدث خلل اثناء التحويل الي موقع الدفع']);
     }
 });
