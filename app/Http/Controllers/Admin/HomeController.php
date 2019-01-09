@@ -103,9 +103,7 @@ class HomeController extends Controller
 
 
         foreach($recentOrders as $order) {
-
             if($order->job) {
-
                 switch ($order->job->status) {
                     case 'completed':
                         $completed++;
@@ -122,33 +120,32 @@ class HomeController extends Controller
                         break;
                 }
             }
-
-
         }
 
-        $events = $recentOrders->map(function($order) use ($activeDate) {
+        $events = $recentOrders->filter(function($order) {
+            return $order->job;
+        })->map(function($order) use ($activeDate) {
+            if($order->job) {
+                $to = Carbon::parse($order->date . $order->calculateDuration());
 
-            $to = Carbon::parse($order->date . $order->calculateDuration());
+                // to fix JS bug that breaks table if time crossed 12AM
+                $toFormatted = $to->format('H');
+                if(!($toFormatted > 1 && $toFormatted < 23)) {
+                    $to = Carbon::parse('23:59:00');
+                }
 
-            // to fix JS bug that breaks table if time crossed 12AM
-            $toFormatted = $to->format('H');
-            if(!($toFormatted > 1 && $toFormatted < 23)) {
-                $to = Carbon::parse('23:59:00');
+                return [
+                    'id' => $order->id,
+                    'name' => $order->id . ': '.optional(optional($order->address)->area)->name,
+                    'driver' => optional(optional(optional($order->job)->driver)->user)->name,
+                    'from' => Carbon::parse($order->date . $order->time)->toDateTimeString(),
+                    'to' => $to->toDateTimeString(),
+                    'class' => optional($order->job)->button_name
+                ];
             }
-
-            return [
-                'id' => $order->id,
-                'name' => $order->id . ': '.optional(optional($order->address)->area)->name,
-                'driver' => optional(optional(optional($order->job)->driver)->user)->name,
-                'from' => Carbon::parse($order->date . $order->time)->toDateTimeString(),
-                'to' => $to->toDateTimeString(),
-                'class' => optional($order->job)->button_name
-            ];
         })->toJson();
 
-
         $dateRange = $this->generateDateRange(Carbon::now(),Carbon::now()->addDays(7));
-
 
         $holidays = $this->holidayModel->whereDate('date','>=',Carbon::today()->toDateString())->get();
 
