@@ -172,7 +172,6 @@ class JobsController extends Controller
 
     public function uploadPhotos($jobID,$request)
     {
-        return response()->json(['success'=>false,'message'=>'uploading image failed. ']);
 
         $job = $this->jobModel->find($jobID);
 
@@ -184,14 +183,10 @@ class JobsController extends Controller
 
         $uploadedImages = [];
 
-        return response()->json(['success'=>false,'message'=>'uploading image failed. ']);
-
         if(count($images)) {
             try {
                 foreach ($images as $image) {
                     $uploadedImage = $this->uploadImage($image);
-//                    $uploadedImage = $image->store('jobs');
-//                    $uploadedImage = $request->file($image)->store('jobs');
                     $uploadedImages[] = ['url'=>$uploadedImage];
                 }
                 $job->photos()->createMany($uploadedImages);
