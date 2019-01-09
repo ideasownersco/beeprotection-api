@@ -122,11 +122,11 @@ class Order extends BaseModel
         $orderDate = $order->date;
         $orderTime = $order->time;
 
-        $dateMax = Carbon::createFromDate('2019','1','14');
-
-        if(Carbon::parse($orderDate)->gt($dateMax)) {
-            throw new \Exception('Free Wash is only until '. $dateMax->toDateString());
-        }
+//        $dateMax = Carbon::createFromDate('2019','1','14');
+//
+//        if(Carbon::parse($orderDate)->gt($dateMax)) {
+//            throw new \Exception('Free Wash is only until '. $dateMax->toDateString());
+//        }
 
         $driverModel = new Driver();
         $orderDuration = $order->calculateDuration();
