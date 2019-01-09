@@ -20,10 +20,10 @@ class JobPhoto extends BaseModel
         return $this->belongsTo(Job::class);
     }
 
-    public function getUrlAttribute()
-    {
-        return $this->getImage($this->attributes['url']);
-    }
+//    public function getUrlAttribute()
+//    {
+//        return $this->getImage($this->attributes['url']);
+//    }
 
 
 }
