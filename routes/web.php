@@ -166,7 +166,7 @@ Route::get('purge_orders',function() {
 
 Auth::routes();
 
-Route::get('knet-pay',function () {
+Route::post('knet-pay',function () {
     $order = \App\Models\Order::first();
     $successURL = route('payment.knet.response.success');
     $errorURL = route('payment.knet.error');
