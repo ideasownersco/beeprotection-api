@@ -151,14 +151,16 @@ class OrdersController extends Controller
             try {
                 if(!$order->job) {
                     $order->create(true);
-                    return response()->json(['success'=>true, 'message' => 'Job Created']);
                 }
             } catch (\Exception $e) {
                 return response()->json(['success'=>false, 'message' => 'Job Creation Failed. '. $e->getMessage()]);
             }
-        }
 
-        return response()->json(['success'=>false, 'message' => 'Invalid Order']);
+            return response()->json(['success'=>true, 'message' => 'Job Created']);
+
+        } else {
+            return response()->json(['success'=>false, 'message' => 'Invalid Order']);
+        }
 
     }
 
