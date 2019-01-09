@@ -4,6 +4,7 @@ use App\Events\UserActivated;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
+use IZaL\Knet\KnetBilling;
 
 Route::get('redis',function (){
 
@@ -165,32 +166,32 @@ Route::get('purge_orders',function() {
 
 Auth::routes();
 
-//Route::post('knet-pay',function () {
-//    $order = \App\Models\Order::first();
-//    $successURL = route('payment.knet.response.success');
-//    $errorURL = route('payment.knet.error');
-//    $knetAlias = env('KNET_ALIAS');
-//    try {
-//        $knetGateway = new KnetBilling([
-//            'alias'        => $knetAlias,
-//            'resourcePath' => base_path() . '/'
-//        ]);
-//        $knetGateway->setResponseURL($successURL);
-//        $knetGateway->setErrorURL($errorURL);
-//        $knetGateway->setAmt($order->total);
-//        $knetGateway->setTrackId($order->id);
-//        $knetGateway->requestPayment();
-//        $paymentURL = $knetGateway->getPaymentURL();
-//        $order->payment_id = $knetGateway->getPaymentID();
-//        $order->status = 'checkout';
-//        $order->save();
-//        return redirect()->away($paymentURL);
-//    } catch (\Exception $e) {
-//        $order->status = 'error';
-//        $order->save();
-//        return response()->json(['success'=>false,'error', 'حدث خلل اثناء التحويل الي موقع الدفع']);
-//    }
-//});
+Route::post('knet-pay',function () {
+    $order = \App\Models\Order::first();
+    $successURL = route('payment.knet.response.success');
+    $errorURL = route('payment.knet.error');
+    $knetAlias = env('KNET_ALIAS');
+    try {
+        $knetGateway = new KnetBilling([
+            'alias'        => $knetAlias,
+            'resourcePath' => base_path() . '/'
+        ]);
+        $knetGateway->setResponseURL($successURL);
+        $knetGateway->setErrorURL($errorURL);
+        $knetGateway->setAmt($order->total);
+        $knetGateway->setTrackId($order->id);
+        $knetGateway->requestPayment();
+        $paymentURL = $knetGateway->getPaymentURL();
+        $order->payment_id = $knetGateway->getPaymentID();
+        $order->status = 'checkout';
+        $order->save();
+        return redirect()->away($paymentURL);
+    } catch (\Exception $e) {
+        $order->status = 'error';
+        $order->save();
+        return response()->json(['success'=>false,'error', 'حدث خلل اثناء التحويل الي موقع الدفع']);
+    }
+});
 
 Route::get('logout',function(){
     Auth::logout();

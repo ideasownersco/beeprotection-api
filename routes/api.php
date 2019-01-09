@@ -69,6 +69,7 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
             Route::get('orders/working', 'OrdersController@getWorkingOrder');
             Route::get('orders/past', 'OrdersController@getPastOrders');
             Route::get('orders/{id}/details', 'OrdersController@getDetail');
+            Route::get('orders/payment/success', 'OrdersController@setPaymentSuccess');
 
             /**
              * CREATE an Order

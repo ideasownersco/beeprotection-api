@@ -138,5 +138,29 @@ class OrdersController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * After Payment, Set Payment Success by creating Job
+     */
+    public function setPaymentSuccess(Request $request)
+    {
+        $order = $this->orderModel->find($request->order_id);
+
+        if($order) {
+            try {
+                if(!$order->job) {
+                    $order->create(true);
+                    return response()->json(['success'=>true, 'message' => 'Job Created']);
+                }
+            } catch (\Exception $e) {
+                return response()->json(['success'=>false, 'message' => 'Job Creation Failed. '. $e->getMessage()]);
+            }
+        }
+
+        return response()->json(['success'=>false, 'message' => 'Invalid Order']);
+
+    }
+
 }
 

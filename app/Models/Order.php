@@ -111,10 +111,9 @@ class Order extends BaseModel
 
     /**
      * @param bool $force
+     * @param null $driver
      * @return Order
-     * @throws DriversNotAvailableException
-     * Create Job
-     * @throws \Exception
+     * @throws DriversNotAvailableException Create Job
      */
     public function create($force= false,$driver = null)
     {
