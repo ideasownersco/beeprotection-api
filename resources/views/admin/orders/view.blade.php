@@ -49,10 +49,10 @@
                             <th>Customer Info</th>
 
                             <td>
-                            @if($order->customer_name)
-                                {{ $order->customer_name }} ({{$order->customer_mobile}})
-                            @else
-                                <a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->name }} ({{$order->user->mobile}})</a>
+                                @if($order->customer_name)
+                                    {{ $order->customer_name }} ({{$order->customer_mobile}})
+                                @else
+                                    <a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->name }} ({{$order->user->mobile}})</a>
                             @endif
 
                             {{--<td><a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->email }}</a></td>--}}
@@ -63,8 +63,8 @@
                             <th>Driver</th>
 
                             <td>
-                                @if($order->job)
-                                    <a href="{{ route('admin.drivers.show',$order->job->driver->id) }}">{{ $order->job->driver->user->name }}</a>
+                                @if($order->job && $order->job->driver)
+                                    <a href="{{ route('admin.drivers.show',$order->job->driver->id) }}">{{ optional($order->job->driver->user)->name }}</a>
                                 @endif
                             </td>
                         </tr>
@@ -80,7 +80,7 @@
                                         <a href="{{ route('admin.packages.show',$package->id) }}">{{ $package->name }} </a><br>
                                         @if($order->services->count())
                                             <b>Add ons</b>
-                                                                            (@foreach($order->services as $service)
+                                    (@foreach($order->services as $service)
                                                 <a href="{{ route('admin.services.show',$service->id) }}">{{ $service->name }} </a>
                                             @endforeach)
                                         @endif
@@ -105,43 +105,45 @@
                             <td>{{ optional($order->address)->formatted_address }} </td>
                         </tr>
                         {{--<tr>--}}
-                            {{--<th>Started Driving at</th>--}}
-                            {{--<td>{{ $order->job->started_driving_at_formatted }}</td>--}}
+                        {{--<th>Started Driving at</th>--}}
+                        {{--<td>{{ $order->job->started_driving_at_formatted }}</td>--}}
                         {{--</tr>--}}
                         {{--<tr>--}}
-                            {{--<th>Stopped Driving at</th>--}}
-                            {{--<td>{{ $order->job->stopped_driving_at_formatted }}</td>--}}
+                        {{--<th>Stopped Driving at</th>--}}
+                        {{--<td>{{ $order->job->stopped_driving_at_formatted }}</td>--}}
                         {{--</tr>--}}
                         {{--<tr>--}}
-                            {{--<th>Started Working at</th>--}}
-                            {{--<td>{{ $order->job->started_working_at_formatted }}</td>--}}
+                        {{--<th>Started Working at</th>--}}
+                        {{--<td>{{ $order->job->started_working_at_formatted }}</td>--}}
                         {{--</tr>--}}
                         {{--<tr>--}}
-                            {{--<th>Stopped Working at</th>--}}
-                            {{--<td>{{ $order->job->stopped_working_at_formatted }}</td>--}}
+                        {{--<th>Stopped Working at</th>--}}
+                        {{--<td>{{ $order->job->stopped_working_at_formatted }}</td>--}}
                         {{--</tr>--}}
                         <tr>
                             <th>Job Status</th>
-                            <td>{{ $order->job->status }}</td>
+                            <td>{{ optional($order->job)->status }}</td>
                         </tr>
-                        <tr>
-                            <th>Photos</th>
-                            <td>
-                                @foreach($order->job->photos as $photo)
-                                    <a href="{{ $photo->url }}" target="_blank">
-                                        <img src="{{ $photo->url }}" class="thumb-lg" />
-                                    </a>
-                                @endforeach
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Photos Approved By Customer</th>
-                            <td>{{ $order->job->photos_approved ? 'Yes' : 'No' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Photo Comment</th>
-                            <td>{{ $order->job->photo_comment }}</td>
-                        </tr>
+                        @if($order->job)
+                            <tr>
+                                <th>Photos</th>
+                                <td>
+                                    @foreach($order->job->photos as $photo)
+                                        <a href="{{ $photo->url }}" target="_blank">
+                                            <img src="{{ $photo->url }}" class="thumb-lg" />
+                                        </a>
+                                    @endforeach
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Photos Approved By Customer</th>
+                                <td>{{ $order->job->photos_approved ? 'Yes' : 'No' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Photo Comment</th>
+                                <td>{{ $order->job->photo_comment }}</td>
+                            </tr>
+                        @endif
 
                         <tr>
                             <th>Payment</th>
