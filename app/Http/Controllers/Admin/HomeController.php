@@ -73,7 +73,6 @@ class HomeController extends Controller
             $queryDate = Carbon::parse($activeDate . ' 2019')->toDateString();
         }
 
-
         $driversCount = $this->driverModel->count();
         $customersCount = $this->userModel->customers()->count();
         $ordersCount = $this->orderModel->success()->count();
@@ -104,21 +103,26 @@ class HomeController extends Controller
 
 
         foreach($recentOrders as $order) {
-            switch ($order->job->status) {
-                case 'completed':
-                    $completed++;
-                    break;
-                case 'driving':
-                    $driving++;
-                    break;
-                case 'pending':
-                    $pending++;
-                    break;
-                case 'working':
-                case 'reached':
-                    $working++;
-                    break;
+
+            if($order->job) {
+
+                switch ($order->job->status) {
+                    case 'completed':
+                        $completed++;
+                        break;
+                    case 'driving':
+                        $driving++;
+                        break;
+                    case 'pending':
+                        $pending++;
+                        break;
+                    case 'working':
+                    case 'reached':
+                        $working++;
+                        break;
+                }
             }
+
 
         }
 
