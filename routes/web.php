@@ -182,6 +182,7 @@ Route::post('knet-pay',function () {
         $knetGateway->setTrackId($order->id);
         $knetGateway->requestPayment();
         $paymentURL = $knetGateway->getPaymentURL();
+        $order->payment_id = $knetGateway->getPaymentID();
         $order->save();
         return redirect()->away($paymentURL);
     } catch (\Exception $e) {
