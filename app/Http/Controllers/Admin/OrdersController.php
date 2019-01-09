@@ -98,9 +98,8 @@ class OrdersController extends Controller
 
         $driverNames = collect();
 
-
         foreach($drivers as $driver) {
-            if($driver->id !== $order->job->driver->id) {
+            if($driver->id !== optional(optional($order->job)->driver)->id) {
                 $driverNames->push(['name'=> $driver->user->name,'id'=>$driver->id]);
             }
         }
@@ -125,10 +124,15 @@ class OrdersController extends Controller
         }
 
         try {
-            $order->job->assignDriver($driver->id,true);
+
+            if($order->job) {
+                $order->job->assignDriver($driver->id,true);
+            } else {
+                $order->create(true,$driver);
+            }
+
             $order->load('job.driver');
         } catch (\Exception $e) {
-
 //            dd($e->getMessage());
             return redirect()->back()->with('warning','Order Failed');
         }

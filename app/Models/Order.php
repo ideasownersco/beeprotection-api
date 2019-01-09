@@ -116,7 +116,7 @@ class Order extends BaseModel
      * Create Job
      * @throws \Exception
      */
-    public function create($force= false)
+    public function create($force= false,$driver = null)
     {
         $order = $this;
         $orderDate = $order->date;
@@ -128,16 +128,18 @@ class Order extends BaseModel
 //            throw new \Exception('Free Wash is only until '. $dateMax->toDateString());
 //        }
 
-        $driverModel = new Driver();
-        $orderDuration = $order->calculateDuration();
-        $driver = $driverModel->getAvailableDriver($orderDate, $orderTime, $orderDuration);
+        if(!$driver) {
+            $driverModel = new Driver();
+            $orderDuration = $order->calculateDuration();
+            $driver = $driverModel->getAvailableDriver($orderDate, $orderTime, $orderDuration);
 
-        if (!$driver) {
-            // after payment success
-            if($force) {
-                $driver = $driverModel->where('offline',0)->where('active',1)->first();
-            } else {
-                throw new DriversNotAvailableException('All Drivers are Busy, Please Choose another Time');
+            if (!$driver) {
+                // after payment success
+                if($force) {
+                    $driver = $driverModel->where('offline',0)->where('active',1)->first();
+                } else {
+                    throw new DriversNotAvailableException('All Drivers are Busy, Please Choose another Time');
+                }
             }
         }
 

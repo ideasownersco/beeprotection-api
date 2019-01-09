@@ -189,65 +189,66 @@
 
             </div>
 
-            <div class="card-box">
+            @if($order->job)
+                <div class="card-box">
 
+                    <div class="bg-light">
 
-                <div class="bg-light">
+                        <section id="cd-timeline" class="cd-container">
+                            <div class="cd-timeline-block">
+                                <div class="cd-timeline-img cd-success">
+                                    <i class="md md-directions-car"></i>
 
-                    <section id="cd-timeline" class="cd-container">
-                        <div class="cd-timeline-block">
-                            <div class="cd-timeline-img cd-success">
-                                <i class="md md-directions-car"></i>
+                                </div> <!-- cd-timeline-img -->
 
-                            </div> <!-- cd-timeline-img -->
+                                <div class="cd-timeline-content">
+                                    <h3>Started Driving</h3>
+                                    <span class="cd-date">{{ $order->job->started_driving_at_formatted }}</span>
+                                </div> <!-- cd-timeline-content -->
+                            </div> <!-- cd-timeline-block -->
 
-                            <div class="cd-timeline-content">
-                                <h3>Started Driving</h3>
-                                <span class="cd-date">{{ $order->job->started_driving_at_formatted }}</span>
-                            </div> <!-- cd-timeline-content -->
-                        </div> <!-- cd-timeline-block -->
+                            <div class="cd-timeline-block">
+                                <div class="cd-timeline-img cd-danger">
+                                    <i class="md md-home"></i>
+                                </div> <!-- cd-timeline-img -->
 
-                        <div class="cd-timeline-block">
-                            <div class="cd-timeline-img cd-danger">
-                                <i class="md md-home"></i>
-                            </div> <!-- cd-timeline-img -->
+                                <div class="cd-timeline-content">
+                                    <h3>Reached at</h3>
+                                    {{--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</p>--}}
+                                    {{--<button type="button" class="btn btn-primary btn-rounded waves-effect waves-light m-t-15">See more detail</button>--}}
+                                    <span class="cd-date">{{ $order->job->stopped_driving_at_formatted }}</span>
+                                </div> <!-- cd-timeline-content -->
+                            </div> <!-- cd-timeline-block -->
 
-                            <div class="cd-timeline-content">
-                                <h3>Reached at</h3>
-                                {{--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</p>--}}
-                                {{--<button type="button" class="btn btn-primary btn-rounded waves-effect waves-light m-t-15">See more detail</button>--}}
-                                <span class="cd-date">{{ $order->job->stopped_driving_at_formatted }}</span>
-                            </div> <!-- cd-timeline-content -->
-                        </div> <!-- cd-timeline-block -->
+                            <div class="cd-timeline-block">
+                                <div class="cd-timeline-img cd-info">
+                                    <i class="md md-local-car-wash"></i>
+                                </div> <!-- cd-timeline-img -->
 
-                        <div class="cd-timeline-block">
-                            <div class="cd-timeline-img cd-info">
-                                <i class="md md-local-car-wash"></i>
-                            </div> <!-- cd-timeline-img -->
+                                <div class="cd-timeline-content">
+                                    <h3>Started Working</h3>
+                                    {{--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, obcaecati, quisquam id molestias eaque asperiores voluptatibus cupiditate error assumenda delectus odit similique earum voluptatem doloremque dolorem ipsam quae rerum quis. Odit, itaque, deserunt corporis vero ipsum nisi eius odio natus ullam provident pariatur temporibus quia eos repellat ... <a href="#">Read more</a></p>--}}
+                                    <span class="cd-date">{{ $order->job->started_working_at_formatted }}</span>
+                                </div> <!-- cd-timeline-content -->
+                            </div> <!-- cd-timeline-block -->
 
-                            <div class="cd-timeline-content">
-                                <h3>Started Working</h3>
-                                {{--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, obcaecati, quisquam id molestias eaque asperiores voluptatibus cupiditate error assumenda delectus odit similique earum voluptatem doloremque dolorem ipsam quae rerum quis. Odit, itaque, deserunt corporis vero ipsum nisi eius odio natus ullam provident pariatur temporibus quia eos repellat ... <a href="#">Read more</a></p>--}}
-                                <span class="cd-date">{{ $order->job->started_working_at_formatted }}</span>
-                            </div> <!-- cd-timeline-content -->
-                        </div> <!-- cd-timeline-block -->
+                            <div class="cd-timeline-block">
+                                <div class="cd-timeline-img cd-pink">
+                                    <i class="md md-done-all"></i>
+                                </div> <!-- cd-timeline-img -->
 
-                        <div class="cd-timeline-block">
-                            <div class="cd-timeline-img cd-pink">
-                                <i class="md md-done-all"></i>
-                            </div> <!-- cd-timeline-img -->
+                                <div class="cd-timeline-content">
+                                    <h3>Stopped Working</h3>
+                                    <img src="assets/images/small/img1.jpg" alt="">
+                                    <span class="cd-date">{{ $order->job->stopped_working_at_formatted }}</span>
+                                </div> <!-- cd-timeline-content -->
+                            </div> <!-- cd-timeline-block -->
 
-                            <div class="cd-timeline-content">
-                                <h3>Stopped Working</h3>
-                                <img src="assets/images/small/img1.jpg" alt="">
-                                <span class="cd-date">{{ $order->job->stopped_working_at_formatted }}</span>
-                            </div> <!-- cd-timeline-content -->
-                        </div> <!-- cd-timeline-block -->
+                        </section> <!-- cd-timeline -->
+                    </div>
 
-                    </section> <!-- cd-timeline -->
                 </div>
-
-            </div>
+            @endif
 
         </div>
     </div>
