@@ -143,7 +143,7 @@ class TimingsController extends Controller
                     $orderDuration = $this->orderModel->calculateDuration($timing->name_en,$packageDuration, $serviceDuration,false);
                     // Check if Order end time crosses maximum limit of working hour for driver. i.e 11PM
                     $workingFinishingHour = Carbon::parse($orderDate . $orderDuration)->format('H');
-                    if(!($workingFinishingHour > 9 && $workingFinishingHour <= 23)) {
+                    if(!($workingFinishingHour >= 9 && $workingFinishingHour <= 23)) {
                         $timing['disabled'] = true;
                     } else {
                         $hasFreeDriver = $this->driverModel->getAvailableDriver($orderDate, $timing->name_en, $orderDuration);
