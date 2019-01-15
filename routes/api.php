@@ -43,6 +43,8 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
 
     Route::get('areas','AreasController@index');
 
+    Route::post('customer/addresses', 'Customer\AddressesController@store');
+
     /**
      * API Authenticated Routes
      */
@@ -58,7 +60,7 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
             /**
              * POST an Address
              */
-            Route::post('addresses', 'AddressesController@store');
+//            Route::post('addresses', 'AddressesController@store');
             Route::post('addresses/{id}/update', 'AddressesController@update');
             Route::post('addresses/delete', 'AddressesController@delete');
 

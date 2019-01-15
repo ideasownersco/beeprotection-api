@@ -31,6 +31,7 @@ class AddressesController extends Controller
     {
         $this->addressModel = $addressModel;
         $this->areaModel = $areaModel;
+//        $this->middleware('log')->except('store');
     }
 
     public function index()
