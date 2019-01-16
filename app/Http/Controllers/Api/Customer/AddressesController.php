@@ -7,6 +7,7 @@ use App\Http\Resources\AddressResource;
 use App\Http\Resources\UserResource;
 use App\Models\Address;
 use App\Models\Area;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -21,17 +22,23 @@ class AddressesController extends Controller
      * @var Area
      */
     private $areaModel;
+    /**
+     * @var User
+     */
+    private $userModel;
 
     /**
      * AddressesController constructor.
      * @param Address $addressModel
      * @param Area $areaModel
+     * @param User $userModel
      */
-    public function __construct(Address $addressModel, Area $areaModel)
+    public function __construct(Address $addressModel, Area $areaModel, User $userModel)
     {
         $this->addressModel = $addressModel;
         $this->areaModel = $areaModel;
 //        $this->middleware('log')->except('store');
+        $this->userModel = $userModel;
     }
 
     public function index()
@@ -56,6 +63,11 @@ class AddressesController extends Controller
         }
 
         $user = Auth::guard('api')->user();
+
+        // create a dummy user
+        if(!$user) {
+            $user = $this->userModel->createFakeUser();
+        }
 
         $address = $user->addresses()->create($request->all());
 

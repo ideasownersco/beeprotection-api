@@ -118,8 +118,6 @@ class LoginController extends Controller
         $password = bcrypt($request->password);
         $mobile = $request->mobile;
         $apiToken = str_random(16);
-        
-        
         // check mobie duplicate;
         
         $duplicate = $this->userModel->where('mobile',$request->mobile)->first();
@@ -135,21 +133,20 @@ class LoginController extends Controller
             'mobile'    => $mobile,
             'api_token' => $apiToken,
             'registration_code' => rand(10000,99999),
-            'active' => 0,
+            'active' => 1,
             'push_token' => $request->password
         ]);
 
         if ($request->driver) {
             $user->driver()->create();
         }
-
-        try {
-//            event(new UserRegistered($user));
-            $this->sendSms($user);
-        } catch (\Exception $e) {
-            $user->delete();
-            return response()->json(['success' => false, 'message' => 'Cannot Register at this time due to system error. try again']);
-        }
+//        try {
+////            event(new UserRegistered($user));
+//            $this->sendSms($user);
+//        } catch (\Exception $e) {
+//            $user->delete();
+//            return response()->json(['success' => false, 'message' => 'Cannot Register at this time due to system error. try again']);
+//        }
 
         return ['success' => true, 'data' => new UserResource($user)];
     }

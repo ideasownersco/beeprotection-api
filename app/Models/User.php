@@ -115,4 +115,15 @@ class User extends Authenticatable
         $query->where('admin', 0)->whereNotIn('id',$drivers);
     }
 
+    public function createFakeUser()
+    {
+
+        $user = User::create(
+            [
+                'name' => uniqid(), 'email' => uniqid().'@guest.com','mobile' => rand(10000000,99999999),'password' => bcrypt('secret'),
+                'guest'=>1,'api_token' => uniqid()
+            ]);
+
+    }
+
 }
