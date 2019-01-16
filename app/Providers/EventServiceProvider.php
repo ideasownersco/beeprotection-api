@@ -33,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         OrderCreated::class   => [
             OrderCreatedNotifications::class,
-            SendPaymentReceiptSMS::class
+//            SendPaymentReceiptSMS::class
         ],
         JobCreated::class     => [
 //            JobCreatedNotifications::class
