@@ -64,7 +64,7 @@ class DriversController extends Controller
         $driverNames = $driverNames->pluck('name','id');
         
         $driverHolidays = $this->blockedDateModel->has('driver.user')->with(['driver.user'])
-            ->whereDate('date','>',Carbon::today()->toDateString())
+            ->whereDate('date','>=',Carbon::today()->toDateString())
             ->where('order_id',1)->get();
 
         $title = 'Drivers';
