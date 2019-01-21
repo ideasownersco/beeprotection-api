@@ -83,11 +83,15 @@ class CheckoutController extends Controller
 
     public function onKnetPaymentSuccess(Request $request)
     {
-        $order = $this->orderModel->find($request->trackID);
-        try {
-            $this->onPaymentSuccess($order);
-        } catch (\Exception $e) {
+        $order = $this->orderModel->with(['job'])->find($request->trackID);
+
+        if(!$order->job) {
+            try {
+                $this->onPaymentSuccess($order);
+            } catch (\Exception $e) {
+            }
         }
+
         return redirect()->route('order.success', [$order->id, 'ref' => $order->transaction_id]);
     }
 
