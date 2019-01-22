@@ -134,7 +134,6 @@ class LoginController extends Controller
             'api_token' => $apiToken,
             'registration_code' => rand(10000,99999),
             'active' => 1,
-//            'push_token' => $request->password
         ]);
 
         if ($request->driver) {
