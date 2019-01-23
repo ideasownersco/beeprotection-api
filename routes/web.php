@@ -245,6 +245,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
     Route::post('orders/{id}/address/update','OrdersController@updateAddress')->name('orders.address.update');
     Route::post('orders/{id}/job/status/update','OrdersController@updateJobStatus')->name('orders.job.status.update');
 
+    Route::get('revenue','OrdersController@getRevenue')->name('revenue.index');
+
     Route::get('/','HomeController@index')->name('home');
 });
 

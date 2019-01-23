@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Driver;
 use App\Models\Order;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -299,4 +301,44 @@ class OrdersController extends Controller
 
     }
 
+    public function getRevenue(Request $request)
+    {
+
+        $month = Carbon::now()->format('M-Y');
+
+        $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
+        $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
+
+        if($request->sort) {
+
+            $month = Carbon::parse($request->month)->format('M-Y');
+
+            if($request->sort == 'prev') {
+                $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
+                $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
+            } else if ($request->sort == 'next') {
+                $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
+                $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
+            }
+
+        }
+
+        $orders = $this->orderModel->success()->whereMonth('date',Carbon::parse($month)->format('m'))->get();
+
+        $period = CarbonPeriod::create(Carbon::parse('first day of '.$month), Carbon::parse('last day of '.$month));
+
+        $data = [];
+
+        foreach ($period as $day) {
+            $date = Carbon::parse($day)->format('Y-m-d');
+            $total = $this->orderModel->success()->whereDate('date',$date)->sum('total');
+            $data[] = ['title'=>$total.'KD','start' =>$date];
+        }
+
+        $payload = collect($data)->toJson();
+
+        $goToDate = Carbon::parse($month)->format('Y-m-d');
+
+        return view('admin.orders.revenue',compact('orders','month','nextMonth','prevMonth','payload','goToDate'));
+    }
 }

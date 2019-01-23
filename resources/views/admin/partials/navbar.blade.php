@@ -23,6 +23,9 @@
                 <li class="{{ request()->segment(2) === 'orders' ? 'has-submenu active' : ''}}">
                     <a href="{{ route('admin.orders.index') }}"><i class="md md-color-lens"></i>Orders</a>
                 </li>
+                <li class="{{ request()->segment(2) === 'locations' ? 'has-submenu active' : ''}}">
+                    <a href="{{ route('admin.revenue.index') }}"><i class="md md-color-lens"></i>Revenue</a>
+                </li>
                 <li class="{{ request()->segment(2) === 'timings' ? 'has-submenu active' : ''}}">
                     <a href="{{ route('admin.timings.index') }}"><i class="md md-color-lens"></i>Timings</a>
                 </li>
