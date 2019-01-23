@@ -139,10 +139,10 @@
                         </tr>
                         <tr>
                             <th>Wash Types
-                                <br>
-                                <a href="#" data-toggle="modal" data-target="#type-edit-modal">
-                                    Edit
-                                </a>
+                                {{--<br>--}}
+                                {{--<a href="#" data-toggle="modal" data-target="#type-edit-modal">--}}
+                                    {{--Edit--}}
+                                {{--</a>--}}
                             </th>
 
                             <td>
@@ -177,10 +177,10 @@
                         </tr>
                         <tr>
                             <th>Date
-                                <br>
-                                <a href="#" data-toggle="modal" data-target="#datetime-edit-modal">
-                                    Edit
-                                </a>
+                                {{--<br>--}}
+                                {{--<a href="#" data-toggle="modal" data-target="#datetime-edit-modal">--}}
+                                    {{--Edit--}}
+                                {{--</a>--}}
                             </th>
                             <td>{{ $order->scheduled_time}} - {{ $order->time_to }}</td>
                         </tr>
