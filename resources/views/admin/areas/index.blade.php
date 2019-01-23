@@ -30,130 +30,36 @@
         });
       });
 
-      /**
-       * Theme: Ubold Admin Template
-       * Author: Coderthemes
-       * Google Maps
-       */
+      var GoogleMap = function() {};
+      GoogleMap.prototype.createMarkers = function($container) {
+        var map = new GMaps({
+          div: $container,
+          lat: 29.3772392006689,
+          lng: 47.98511826155676
+        });
 
-      !function($) {
-        "use strict";
-
-
-        var GoogleMap = function() {};
-
-        //creates map with markers
-        GoogleMap.prototype.createMarkers = function($container) {
-          // var mapOptions = {
-          //   zoom: 5,
-          //   // center: myLatlng,
-          //   // mapTypeId: GoogleMap().MapTypeId.ROADMAP,
-          //   backgroundColor: '#FFF',
-          //   disableDefaultUI: true,
-          //   draggable: false,
-          //   scaleControl: false,
-          //   scrollwheel: false,
-          //   styles: [
-          //     {
-          //       "featureType": "water",
-          //       "elementType": "geometry",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }, {
-          //       "featureType": "landscape",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }, {
-          //       "featureType": "road",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }, {
-          //       "featureType": "administrative",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }, {
-          //       "featureType": "poi",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }, {
-          //       "featureType": "administrative",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }, {
-          //       "elementType": "labels",
-          //       "stylers": [
-          //         {"visibility": "off"}
-          //       ]
-          //     }
-          //   ]
-          // };
-          var map = new GMaps({
-            div: $container,
-            lat: 29.3772392006689,
-            lng: 47.98511826155676
+        var markers = {!! $areas !!};
+        markers.map(function(marker) {
+          map.addMarker({
+            lat: marker.latitude,
+            lng: marker.longitude,
+            title: marker.name_en,
+            infoWindow: {
+              content: '<p>Total Orders at '+ marker.name_en +' : <b>' + marker.orders_count +'</b></p>'
+            }
           });
-
-          var markers = {!! $areas !!};
-          console.log('markers',markers);
-          markers.map(function(marker) {
-            map.addMarker({
-              lat: marker.latitude,
-              lng: marker.longitude,
-              title: marker.name_en,
-              infoWindow: {
-                content: '<p>Total Orders at '+ marker.name_en +' : <b>' + marker.orders_count +'</b></p>'
-              }
-            });
-          });
-
-          //sample markers, but you can pass actual marker data as function parameter
-          // map.addMarker({
-          //   lat: -12.043333,
-          //   lng: -77.03,
-          //   title: 'Lima',
-          //   details: {
-          //     database_id: 42,
-          //     author: 'HPNeo'
-          //   },
-          //   click: function(e){
-          //     if(console.log)
-          //       console.log(e);
-          //     alert('You clicked in this marker');
-          //   }
-          // });
-          // map.addMarker({
-          //   lat: -12.042,
-          //   lng: -77.028333,
-          //   title: 'Marker with InfoWindow',
-          //   infoWindow: {
-          //     content: '<p>HTML Content</p>'
-          //   }
-          // });
-
-          return map;
-        },
-          //init
-          GoogleMap.prototype.init = function() {
-            var $this = this;
-            $(document).ready(function(){
-              $this.createMarkers('#gmaps-markers');
-            });
-          },
-          $.GoogleMap = new GoogleMap, $.GoogleMap.Constructor = GoogleMap
-      }(window.jQuery),
-
-        function($) {
-          "use strict";
-          $.GoogleMap.init()
-        }(window.jQuery);
-
-
+        });
+        return map;
+      };
+      GoogleMap.prototype.init = function() {
+        var $this = this;
+        $(document).ready(function(){
+          $this.createMarkers('#gmaps-markers');
+        });
+      };
+      $.GoogleMap = new GoogleMap;
+      // $.GoogleMap.Constructor = GoogleMap;
+      $.GoogleMap.init();
     </script>
 @endsection
 
@@ -202,10 +108,10 @@
 
                                         @if($area->active)
                                             <span class="label label-success ">Yes</span>
-                                            @else
+                                        @else
                                             <span class="label label-danger ">No</span>
-                                        @endif
-                                        {{--{{ $area->active ? 'Yes' : 'No' }}</td>--}}
+                                    @endif
+                                    {{--{{ $area->active ? 'Yes' : 'No' }}</td>--}}
                                     <td>
                                         <a href="{{ route('admin.areas.show',$area->id) }}" class="table-action-btn"><i class="md md-edit"></i></a>
                                         <a href="#" data-toggle="modal" data-target="#deleteModalBox"

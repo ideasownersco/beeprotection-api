@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Core\InvoicesExport;
 use App\Http\Controllers\Controller;
+use App\Models\Area;
 use App\Models\Driver;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -18,16 +19,22 @@ class OrdersController extends Controller
      * @var Driver
      */
     private $driverModel;
+    /**
+     * @var Area
+     */
+    private $areaModel;
 
     /**
      * OrdersController constructor.
      * @param Order $orderModel
      * @param Driver $driverModel
+     * @param Area $areaModel
      */
-    public function __construct(Order $orderModel,Driver $driverModel)
+    public function __construct(Order $orderModel,Driver $driverModel,Area $areaModel)
     {
         $this->orderModel = $orderModel;
         $this->driverModel = $driverModel;
+        $this->areaModel = $areaModel;
     }
 
     /**
@@ -106,7 +113,9 @@ class OrdersController extends Controller
 
         $driverNames = $driverNames->pluck('name','id');
 
-        return view('admin.orders.view', compact('order','title','driverNames'));
+        $areas = $this->areaModel->with(['parent'])->withCount(['orders'])->where('parent_id','!=',null)->pluck('name_en','id');
+
+        return view('admin.orders.view', compact('order','title','driverNames','areas'));
     }
 
     public function assignDriver($id,Request $request)
@@ -191,6 +200,103 @@ class OrdersController extends Controller
     public function export(Request $request)
     {
         return (new InvoicesExport)->download('payment-'.date('d-m-Y_H-m-s').'.xlsx');
+    }
+
+    public function updateCustomer($id,Request $request)
+    {
+        $this->validate($request,[
+            'name'     => 'required|max:50',
+            'email'    => 'email|sometimes',
+            'mobile'   => 'required|digits:8',
+        ]);
+
+        $order = $this->orderModel->find($id);
+
+        $order->update([
+            'customer_name' => $request->name,
+            'customer_email' => $request->email,
+            'customer_mobile' => $request->mobile
+        ]);
+
+        return redirect()->back()->with(['success' => 'Updated']);
+
+    }
+    public function updateWashType($id,Request $request)
+    {
+        $this->validate($request,[
+//            'name'     => 'required|max:50',
+//            'email'    => 'email|sometimes',
+//            'mobile'   => 'required|digits:8',
+        ]);
+
+        $order = $this->orderModel->find($id);
+
+        return redirect()->back()->with(['success' => 'Updated']);
+
+    }
+
+    public function updateAmount($id,Request $request)
+    {
+        $this->validate($request, [
+            'total'     => 'required|numeric',
+        ]);
+
+        $order = $this->orderModel->find($id);
+
+        $order->total = $request->total;
+        $order->save();
+
+        return redirect()->back()->with(['success' => 'Updated']);
+
+    }
+
+    public function updateDateTime($id,Request $request)
+    {
+        $this->validate($request,[
+        ]);
+        $order = $this->orderModel->find($id);
+
+        return redirect()->back()->with(['success' => 'Updated']);
+
+    }
+
+    public function updateAddress($id,Request $request)
+    {
+        $this->validate($request,[
+            'area_id'     => 'required',
+            'block'    => 'required',
+            'street'    => 'required',
+            'latitude'    => 'required',
+            'longitude'    => 'required',
+        ]);
+
+        $order = $this->orderModel->find($id);
+
+        $address = $order->address;
+
+        if($address) {
+            $address = $address->update($request->all());
+        } else {
+            $address = $order->address()->create($request->all());
+        }
+
+        return redirect()->back()->with(['success' => 'Updated']);
+
+    }
+
+    public function updateJobStatus($id,Request $request)
+    {
+        $this->validate($request,[
+            'status' => 'required|in:pending,driving,reached,working,completed'
+        ]);
+        $order = $this->orderModel->find($id);
+
+        $job = $order->job;
+        $job->status = $request->status;
+        $job->save();
+
+        return redirect()->back()->with(['success' => 'Updated Job Status']);
+
     }
 
 }

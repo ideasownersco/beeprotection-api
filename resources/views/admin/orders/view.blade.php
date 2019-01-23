@@ -8,6 +8,9 @@
 @section('scripts')
     @parent
     <script src="/plugins/timepicker/bootstrap-timepicker.js"></script>
+    <script src="https://maps.google.com/maps/api/js?key=AIzaSyCpQX4H0QPxVgKuNMZ0ELG_ymgT8RHcKh4"></script>
+    <script src="/plugins/gmaps/gmaps.min.js"></script>
+
     <script>
       $(document).ready(function() {
         $('#start_time').timepicker({
@@ -24,8 +27,47 @@
             down: 'md md-expand-more'
           }
         });
+
+        // $('#cust-edit-modal').modal('show');
       });
+
+      var GoogleMap = function() {};
+
+      var lat = {!! $order->address ? $order->address->latitude : '29.3772392006689' !!}
+      var lng = {!! $order->address ? $order->address->longitude : '47.98511826155676' !!}
+
+      GoogleMap.prototype.createMarkers = function($container) {
+        var map = new GMaps({
+          div: $container,
+          lat: lat,
+          lng: lng
+        });
+        map.addMarker({
+          lat: lat,
+          lng: lng,
+          draggable: true,
+          dragend: function(event) {
+            // var lat = event.latLng.lat();
+            // var lng = event.latLng.lng();
+            $('#latitude').val(event.latLng.lat());
+            $('#longitude').val(event.latLng.lng());
+          },
+        });
+      };
+      GoogleMap.prototype.init = function() {
+        var $this = this;
+        $(document).ready(function(){
+          $this.createMarkers('#gmaps-markers');
+        });
+      };
+
+      $('#address-edit-modal').on('shown.bs.modal', function (e) {
+        $.GoogleMap = new GoogleMap;
+        $.GoogleMap.init();
+      });
+
     </script>
+
 @endsection
 
 @section('content')
@@ -35,8 +77,21 @@
         <li class="breadcrumb-item active">{{ $order->name }}</li>
     @endcomponent
 
+    @include('admin.orders.modals.customer_edit',[
+        'name' => $order->customer_name ? $order->customer_name : $order->user->name,
+        'email' => $order->customer_email ? $order->customer_email : $order->user->email,
+        'mobile' => $order->customer_mobile ? $order->customer_mobile : $order->user->mobile,
+    ])
+    @include('admin.orders.modals.driver_edit')
+    @include('admin.orders.modals.type_edit')
+    @include('admin.orders.modals.amount_edit')
+    @include('admin.orders.modals.datetime_edit')
+    @include('admin.orders.modals.address_edit')
+    @include('admin.orders.modals.job_status_edit')
+    @include('admin.orders.modals.address_edit')
+
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="card-box">
                 <div class="table-responsive m-t-10">
                     <table class="table table-actions-bar">
@@ -46,21 +101,35 @@
                             <td>{{ $order->id }}</td>
                         </tr>
                         <tr>
-                            <th>Customer Info</th>
-
+                            <th>Customer Info
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#customer-edit-modal">
+                                    Edit
+                                </a>
+                            </th>
                             <td>
                                 @if($order->customer_name)
-                                    {{ $order->customer_name }} ({{$order->customer_mobile}})
+                                    {{ $order->customer_name }}
+                                    <br>
+                                    {{$order->customer_mobile}}
+                                    <br>
+                                    {{ $order->user->email }}
                                 @else
-                                    <a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->name }} ({{$order->user->mobile}})</a>
-                            @endif
-
-                            {{--<td><a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->email }}</a></td>--}}
-                            <td><a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->email }}</a>
+                                    <a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->name }}</a>
+                                    <br>
+                                    {{$order->user->mobile}}
+                                    <br>
+                                    {{ $order->user->email }}
+                                @endif
                             </td>
                         </tr>
                         <tr>
-                            <th>Driver</th>
+                            <th>Driver
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#driver-edit-modal">
+                                    Change
+                                </a>
+                            </th>
 
                             <td>
                                 @if($order->job && $order->job->driver)
@@ -69,7 +138,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Wash Types</th>
+                            <th>Wash Types
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#type-edit-modal">
+                                    Edit
+                                </a>
+                            </th>
 
                             <td>
                                 @if($order->free_wash)
@@ -80,9 +154,9 @@
                                         <a href="{{ route('admin.packages.show',$package->id) }}">{{ $package->name }} </a><br>
                                         @if($order->services->count())
                                             <b>Add ons</b>
-                                    (@foreach($order->services as $service)
+                                            @foreach($order->services as $service)
                                                 <a href="{{ route('admin.services.show',$service->id) }}">{{ $service->name }} </a>
-                                            @endforeach)
+                                            @endforeach
                                         @endif
                                         @if(!$loop->last)
                                             <hr>
@@ -93,15 +167,30 @@
                             {{--<td>{{ implode($order->packages->pluck('name_ar')->toArray(),', ')}}</td>--}}
                         </tr>
                         <tr>
-                            <th>Amount</th>
+                            <th>Amount
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#amount-edit-modal">
+                                    Edit
+                                </a>
+                            </th>
                             <td>{{ $order->total}} KD</td>
                         </tr>
                         <tr>
-                            <th>Date</th>
+                            <th>Date
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#datetime-edit-modal">
+                                    Edit
+                                </a>
+                            </th>
                             <td>{{ $order->scheduled_time}} - {{ $order->time_to }}</td>
                         </tr>
                         <tr>
-                            <th>Address</th>
+                            <th>Address
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#address-edit-modal">
+                                    Edit
+                                </a>
+                            </th>
                             <td>{{ optional($order->address)->formatted_address }} </td>
                         </tr>
                         {{--<tr>--}}
@@ -121,7 +210,12 @@
                         {{--<td>{{ $order->job->stopped_working_at_formatted }}</td>--}}
                         {{--</tr>--}}
                         <tr>
-                            <th>Job Status</th>
+                            <th>Job Status
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#job-status-edit-modal">
+                                    Edit
+                                </a>
+                            </th>
                             <td>{{ optional($order->job)->status }}</td>
                         </tr>
                         @if($order->job)
@@ -150,6 +244,7 @@
                             <td>{{ strtoupper($order->payment_mode) }}</td>
                         </tr>
 
+
                         </tbody>
                     </table>
 
@@ -159,28 +254,28 @@
         </div> <!-- end col -->
 
 
-        <div class="col-lg-7">
+        <div class="col-lg-6">
 
             <div class="row">
 
-                <div class="col-lg-6">
-                    <div class="card-box">
-                        <h4 class="text-dark header-title m-t-0">Change Driver</h4>
+                {{--<div class="col-lg-6">--}}
+                {{--<div class="card-box">--}}
+                {{--<h4 class="text-dark header-title m-t-0">Change Driver</h4>--}}
 
-                        {!! Form::open(['route' => ['admin.orders.driver.assign',$order->id], 'method' => 'post','files'=>true], ['class'=>'']) !!}
+                {{--{!! Form::open(['route' => ['admin.orders.driver.assign',$order->id], 'method' => 'post','files'=>true], ['class'=>'']) !!}--}}
 
-                        <div class="form-group">
-                            {!! Form::select('driver_id',$driverNames,null,['class'=>'form-control']) !!}
-                        </div>
+                {{--<div class="form-group">--}}
+                {{--{!! Form::select('driver_id',$driverNames,null,['class'=>'form-control']) !!}--}}
+                {{--</div>--}}
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success" style="width: 100%">Save</button>
-                        </div>
+                {{--<div class="form-group">--}}
+                {{--<button type="submit" class="btn btn-success" style="width: 100%">Save</button>--}}
+                {{--</div>--}}
 
-                        {!! Form::close() !!}
+                {{--{!! Form::close() !!}--}}
 
-                    </div>
-                </div>
+                {{--</div>--}}
+                {{--</div>--}}
                 <div class="col-lg-6">
                     <div class="card-box">
                         <a href="{{ route('admin.invoice',$order->id) }}" class="btn btn-success">Print Invoice</a>

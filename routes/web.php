@@ -240,6 +240,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
     Route::post('drivers/holiday/assign','DriversController@assignHoliday')->name('drivers.holiday.assign');
     Route::get('drivers/holidays/{id}/delete','DriversController@deleteHoliday')->name('drivers.holiday.delete');
 
+
+    //Edit Order
+    Route::post('orders/{id}/customer/update','OrdersController@updateCustomer')->name('orders.customer.update');
+    Route::post('orders/{id}/type/update','OrdersController@updateWashType')->name('orders.type.update');
+    Route::post('orders/{id}/amount/update','OrdersController@updateAmount')->name('orders.amount.update');
+    Route::post('orders/{id}/datetime/update','OrdersController@updateDateTime')->name('orders.datetime.update');
+    Route::post('orders/{id}/address/update','OrdersController@updateAddress')->name('orders.address.update');
+    Route::post('orders/{id}/job/status/update','OrdersController@updateJobStatus')->name('orders.job.status.update');
+
     Route::get('/','HomeController@index')->name('home');
 });
 
