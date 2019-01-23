@@ -42,7 +42,6 @@
     </td>
     {{--<td><a href="{{ route('admin.users.show',$order->user->id) }}">{{ $order->user->name }} ({{$order->user->mobile}})</a> </td>--}}
     <td>
-
         @if($order->job)
             <btn class="btn btn-{{$order->job->button_name}} btn-xs">{{ optional($order->job)->status }}</btn>
         @endif

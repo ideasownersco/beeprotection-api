@@ -176,6 +176,8 @@ class Job extends BaseModel
                 return 'info';
             case 'completed':
                 return 'success';
+            case 'cancelled':
+                return 'warning';
         }
 
     }

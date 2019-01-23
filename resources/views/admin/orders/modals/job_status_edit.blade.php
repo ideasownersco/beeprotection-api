@@ -13,6 +13,7 @@
                     <option value="reached" {{ $order->job->status === 'reached' ? "selected" : "" }}>Reached</option>
                     <option value="working" {{ $order->job->status === 'working' ? "selected" : "" }}>Working</option>
                     <option value="completed" {{ $order->job->status === 'completed' ? "selected" : "" }}>Completed</option>
+                    <option value="cancelled" {{ $order->job->status === 'cancelled' ? "selected" : "" }}>Cancelled</option>
                 </select>
             </div>
             <div class="modal-footer">
