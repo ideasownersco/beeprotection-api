@@ -287,7 +287,7 @@ class OrdersController extends Controller
     public function updateJobStatus($id,Request $request)
     {
         $this->validate($request,[
-            'status' => 'required|in:pending,driving,reached,working,completed'
+            'status' => 'required|in:pending,driving,reached,working,completed,cancelled'
         ]);
         $order = $this->orderModel->find($id);
 
