@@ -136,10 +136,9 @@ Route::get('purge_job_counts',function (){
     dd($dates);
 });
 
-Route::get('purge_orders',function() {
-
-    $date = \Carbon\Carbon::yesterday()->toDateString();
-    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->paginate(200);
+Route::get('delete_old_orders',function() {
+//    $date = \Carbon\Carbon::yesterday()->toDateString();
+    $orders = Order::whereDate('date','<','2019-01-15')->paginate(200);
 
     foreach ($orders as $order) {
 
@@ -157,11 +156,8 @@ Route::get('purge_orders',function() {
 
         $order->delete();
     }
-
-    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->count();
-
-    dd($orders);
-
+//    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->count();
+    dd($orders->count());
 });
 
 Auth::routes();
