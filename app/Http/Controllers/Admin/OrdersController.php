@@ -152,6 +152,9 @@ class OrdersController extends Controller
 
     public function destroy($id)
     {
+
+        return redirect()->back()->with('error','Cannot Delete Order');
+
         $order = $this->orderModel->find($id);
 
         if(!$order) {
