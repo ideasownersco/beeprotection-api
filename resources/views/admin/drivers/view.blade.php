@@ -79,44 +79,31 @@
         </div>
 
         <div class="col-lg-7">
+
             <div class="card-box">
-                <div class="table-responsive m-t-10">
-                    <table class="table table-actions-bar">
-                        <tbody>
-                        @if($driver->image)
-                            <tr>
-                                <th>Image</th>
-                                <td><img src="{{ $driver->user->image }}" class="thumb-sm"/></td>
-                            </tr>
-                        <tbody>
-                        @endif
-                        <tr>
-                            <th>Name</th>
-                            <td>{{ $driver->user->name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Email</th>
-                            <td>{{ $driver->user->email }}</td>
-                        </tr>
-                        <tr>
-                            <th>Mobile</th>
-                            <td>{{ $driver->user->mobile }}</td>
-                        </tr>
-                        <tr>
-                            <th>Working Hours </th>
-                            <td>{{ $driver->start_time }} - {{ $driver->end_time }}</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>{{ $driver->offline ? 'Offline' : 'Online' }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+
+                <div class="col-12">
+
+                    <div class="row">
+                        <div class="col-2">
+                            <a class="btn btn-info pull-left" href="{{route('admin.drivers.show',['id'=>$driver->id,'month'=>$prevMonth])}}" id='prev'>
+                                <i class="fa fa-arrow-circle-left fa-2x"></i>
+                            </a>
+                        </div>
+                        <div class="col-8">
+                            <h4 style="text-align: center">{{$month}}</h4>
+                        </div>
+                        <div class="col-2">
+                            <a class="btn btn-info pull-right" href="{{route('admin.drivers.show',['id'=>$driver->id,'month'=>$nextMonth])}}" id='next'>
+                                <i class="fa fa-arrow-circle-right fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
 
                 </div>
 
+                <div id="calendar"></div>
             </div>
-
 
             <div class="card-box">
                 <a href="{{ route('admin.orders.index') }}" class="pull-right btn btn-default btn-sm waves-effect waves-light">View All</a>
@@ -155,28 +142,41 @@
         <div class="col-lg-5">
 
             <div class="card-box">
-
-                <div class="col-12">
-
-                    <div class="row">
-                        <div class="col-2">
-                            <a class="btn btn-info pull-left" href="{{route('admin.drivers.show',['id'=>$driver->id,'month'=>$prevMonth])}}" id='prev'>
-                                <i class="fa fa-arrow-circle-left fa-2x"></i>
-                            </a>
-                        </div>
-                        <div class="col-8">
-                            <h4 style="text-align: center">{{$month}}</h4>
-                        </div>
-                        <div class="col-2">
-                            <a class="btn btn-info pull-right" href="{{route('admin.drivers.show',['id'=>$driver->id,'month'=>$nextMonth])}}" id='next'>
-                                <i class="fa fa-arrow-circle-right fa-2x"></i>
-                            </a>
-                        </div>
-                    </div>
+                <div class="table-responsive m-t-10">
+                    <table class="table table-actions-bar">
+                        <tbody>
+                        @if($driver->image)
+                            <tr>
+                                <th>Image</th>
+                                <td><img src="{{ $driver->user->image }}" class="thumb-sm"/></td>
+                            </tr>
+                        <tbody>
+                        @endif
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ $driver->user->name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ $driver->user->email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mobile</th>
+                            <td>{{ $driver->user->mobile }}</td>
+                        </tr>
+                        <tr>
+                            <th>Working Hours </th>
+                            <td>{{ $driver->start_time }} - {{ $driver->end_time }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ $driver->offline ? 'Offline' : 'Online' }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
                 </div>
 
-                <div id="calendar"></div>
             </div>
 
             <div class="card-box">
