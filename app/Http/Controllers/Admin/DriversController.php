@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Package;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,7 +72,7 @@ class DriversController extends Controller
         return view('admin.drivers.index', compact('drivers','title','driverNames','driverHolidays'));
     }
 
-    public function show($id)
+    public function show($id,Request $request)
     {
         $driver = $this->driverModel->find($id);
 
@@ -81,7 +82,7 @@ class DriversController extends Controller
                 $q->where('driver_id',$driver->id);
             })
             ->success()
-            ->paginate(10)
+            ->paginate(20)
         ;
 
         $todaysCount = $this->orderModel->whereHas('job',function($q) use ($driver) {
@@ -97,7 +98,42 @@ class DriversController extends Controller
         })->success()->year()->count();
 
         $title = $driver->name;
-        return view('admin.drivers.view',compact('title','driver','todaysCount','monthsCount','yearsCount','orders'));
+
+
+        if($request->month) {
+            $month = Carbon::parse($request->month)->format('M-Y');
+        } else {
+            $month = Carbon::now()->format('M-Y');
+        }
+
+        $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
+        $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
+
+        $period = CarbonPeriod::create(Carbon::parse('first day of '.$month), Carbon::parse('last day of '.$month));
+
+        $data = [];
+
+        $driverOrders = $this->orderModel
+            ->with(['job'])
+            ->whereHas('job',function($q) use ($driver) {
+                $q->where('driver_id',$driver->id);
+            })
+            ->success()
+            ->whereMonth('date',Carbon::parse($month)->format('m'))
+            ->get(['date','total']);
+        ;
+
+        foreach ($period as $day) {
+            $date = Carbon::parse($day)->format('Y-m-d');
+            $total = $driverOrders->where('date',$date)->sum('total');
+            $data[] = ['title'=>$total.'KD','start' =>$date];
+        }
+
+        $payload = collect($data)->toJson();
+
+        $goToDate = Carbon::parse($month)->format('Y-m-d');
+
+        return view('admin.drivers.view',compact('title','driver','todaysCount','monthsCount','yearsCount','orders','payload','goToDate','month','prevMonth','nextMonth'));
     }
 
     public function store(Request $request)

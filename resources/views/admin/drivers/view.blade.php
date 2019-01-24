@@ -3,12 +3,25 @@
 @section('styles')
     @parent
     <link href="/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+    <link href="/plugins/fullcalendar/css/fullcalendar.min.css" rel="stylesheet" />
+
 @endsection
 
 @section('scripts')
     @parent
     <script src="/plugins/timepicker/bootstrap-timepicker.js"></script>
+    <script src="/plugins/moment/moment.js"></script>
+    <script src='/plugins/fullcalendar/js/fullcalendar.min.js'></script>
     <script>
+      var payload = {!!  $payload  !!};
+
+
+      $('#calendar').fullCalendar({
+        header: false,
+        events:payload,
+      });
+      $('#calendar').fullCalendar('gotoDate', '{!! $goToDate !!}');
+
       $(document).ready(function() {
         $('#start_time').timepicker({
           defaultTIme: false,
@@ -24,6 +37,7 @@
             down: 'md md-expand-more'
           }
         });
+
       });
     </script>
 @endsection
@@ -64,7 +78,7 @@
             </div>
         </div>
 
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <div class="card-box">
                 <div class="table-responsive m-t-10">
                     <table class="table table-actions-bar">
@@ -138,7 +152,33 @@
 
         </div> <!-- end col -->
 
-        <div class="col-lg-4">
+        <div class="col-lg-5">
+
+            <div class="card-box">
+
+                <div class="col-12">
+
+                    <div class="row">
+                        <div class="col-2">
+                            <a class="btn btn-info pull-left" href="{{route('admin.drivers.show',['id'=>$driver->id,'month'=>$prevMonth])}}" id='prev'>
+                                <i class="fa fa-arrow-circle-left fa-2x"></i>
+                            </a>
+                        </div>
+                        <div class="col-8">
+                            <h4 style="text-align: center">{{$month}}</h4>
+                        </div>
+                        <div class="col-2">
+                            <a class="btn btn-info pull-right" href="{{route('admin.drivers.show',['id'=>$driver->id,'month'=>$nextMonth])}}" id='next'>
+                                <i class="fa fa-arrow-circle-right fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="calendar"></div>
+            </div>
+
             <div class="card-box">
                 <h4 class="text-dark header-title m-t-0">Edit Driver : {{ $driver->user->name }}</h4>
                 <hr>
