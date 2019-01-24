@@ -13,21 +13,11 @@
     <script src='/plugins/fullcalendar/js/fullcalendar.min.js'></script>
     <script>
       var payload = {!!  $payload  !!};
-      console.log('payload',payload);
       $('#calendar').fullCalendar({
         header: false,
         events:payload,
-
       });
-      $('#prev').on('click', function() {
-        $('#calendar').fullCalendar('prev'); // call method
-      });
-      $('#next').on('click', function() {
-        $('#calendar').fullCalendar('next'); // call method
-      });
-
       $('#calendar').fullCalendar('gotoDate', '{!! $goToDate !!}');
-      // $.fullCalendar.moment('2014-05-01');
     </script>
 @endsection
 
