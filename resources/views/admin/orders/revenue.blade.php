@@ -43,11 +43,27 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="card-box">
-                        <p>
-                            <a class="btn" href="{{route('admin.revenue.index',['month'=>$prevMonth,'sort'=>'prev'])}}" id='prev'>{{$prevMonth}}</a>
-                            <a class="btn pull-right" href="{{route('admin.revenue.index',['month'=>$nextMonth,'sort'=>'next'])}}" id='next'>{{$nextMonth}}</a>
-                        </p>
-                        <h4 style="text-align: center">{{$month}}</h4>
+
+                        <div class="col-12">
+
+                            <div class="row">
+                                <div class="col-2">
+                                    <a class="btn btn-info pull-left" href="{{route('admin.revenue.index',['month'=>$prevMonth])}}" id='prev'>
+                                        <i class="fa fa-arrow-circle-left fa-2x"></i>
+                                    </a>
+                                </div>
+                                <div class="col-8">
+                                    <h4 style="text-align: center">{{$month}}</h4>
+                                </div>
+                                <div class="col-2">
+                                    <a class="btn btn-info pull-right" href="{{route('admin.revenue.index',['month'=>$nextMonth])}}" id='next'>
+                                        <i class="fa fa-arrow-circle-right fa-2x"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div id="calendar"></div>
                     </div>
                 </div> <!-- end col -->
