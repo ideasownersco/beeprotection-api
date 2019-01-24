@@ -304,34 +304,24 @@ class OrdersController extends Controller
     public function getRevenue(Request $request)
     {
 
-        $month = Carbon::now()->format('M-Y');
-
-        $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
-        $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
-
-        if($request->sort) {
-
+        if($request->month) {
             $month = Carbon::parse($request->month)->format('M-Y');
-
-            if($request->sort == 'prev') {
-                $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
-                $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
-            } else if ($request->sort == 'next') {
-                $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
-                $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
-            }
-
+        } else {
+            $month = Carbon::now()->format('M-Y');
         }
 
-        $orders = $this->orderModel->success()->whereMonth('date',Carbon::parse($month)->format('m'))->get();
+        $prevMonth = Carbon::parse($month)->subMonth(1)->format('M-Y');
+        $nextMonth = Carbon::parse($month)->addMonth(1)->format('M-Y');
 
         $period = CarbonPeriod::create(Carbon::parse('first day of '.$month), Carbon::parse('last day of '.$month));
 
         $data = [];
 
+        $orders = $this->orderModel->success()->whereMonth('date',Carbon::parse($month)->format('m'))->get(['date','total']);
+
         foreach ($period as $day) {
             $date = Carbon::parse($day)->format('Y-m-d');
-            $total = $this->orderModel->success()->whereDate('date',$date)->sum('total');
+            $total = $orders->where('date',$date)->sum('total');
             $data[] = ['title'=>$total.'KD','start' =>$date];
         }
 
@@ -339,6 +329,6 @@ class OrdersController extends Controller
 
         $goToDate = Carbon::parse($month)->format('Y-m-d');
 
-        return view('admin.orders.revenue',compact('orders','month','nextMonth','prevMonth','payload','goToDate'));
+        return view('admin.orders.revenue',compact('month','nextMonth','prevMonth','payload','goToDate'));
     }
 }
