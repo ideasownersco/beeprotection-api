@@ -8,8 +8,6 @@
     <meta content="" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="shortcut icon" href="/images/favicon.ico">
-
     @section('styles')
         @include('admin.partials.styles')
     @show
