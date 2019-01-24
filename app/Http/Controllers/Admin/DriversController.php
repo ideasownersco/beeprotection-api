@@ -63,7 +63,7 @@ class DriversController extends Controller
         }
 
         $driverNames = $driverNames->pluck('name','id');
-        
+
         $driverHolidays = $this->blockedDateModel->has('driver.user')->with(['driver.user'])
             ->whereDate('date','>=',Carbon::today()->toDateString())
             ->where('order_id',1)->get();
@@ -114,9 +114,11 @@ class DriversController extends Controller
         $data = [];
 
         $driverOrders = $this->orderModel
-            ->with(['job'])
             ->whereHas('job',function($q) use ($driver) {
-                $q->where('driver_id',$driver->id);
+                $q
+                    ->where('driver_id',$driver->id)
+                    ->valid()
+                ;
             })
             ->success()
             ->whereMonth('date',Carbon::parse($month)->format('m'))

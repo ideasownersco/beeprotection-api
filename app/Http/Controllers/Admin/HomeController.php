@@ -76,9 +76,10 @@ class HomeController extends Controller
         $driversCount = $this->driverModel->count();
         $customersCount = $this->userModel->customers()->count();
         $ordersCount = $this->orderModel->success()->count();
-        $revenue = $this->orderModel->with(['job'=>function($q){
-            return $q->where('status','!=','cancelled');
-        }])->success()->sum('total');
+        $revenue = $this->orderModel
+            ->whereHas('job',function($q){
+                return $q->valid();
+            })->success()->sum('total');
 
         $drivers = $this->driverModel->has('user')->with(['user'])->get();
 

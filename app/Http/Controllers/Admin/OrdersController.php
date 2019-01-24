@@ -317,7 +317,12 @@ class OrdersController extends Controller
 
         $data = [];
 
-        $orders = $this->orderModel->success()->whereMonth('date',Carbon::parse($month)->format('m'))->get(['date','total']);
+        $orders = $this->orderModel
+            ->whereHas('job',function($q) {
+                $q->valid()
+                ;
+            })
+            ->success()->whereMonth('date',Carbon::parse($month)->format('m'))->get(['date','total']);
 
         foreach ($period as $day) {
             $date = Carbon::parse($day)->format('Y-m-d');

@@ -30,6 +30,12 @@ class Job extends BaseModel
         return $this->hasMany(JobPhoto::class);
     }
 
+    public function scopeValid($query)
+    {
+        return $query->where('status','!=', 'cancelled');
+    }
+
+
     public function startDriving()
     {
         $this->update([
