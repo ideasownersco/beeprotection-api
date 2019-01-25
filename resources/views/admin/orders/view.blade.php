@@ -87,6 +87,7 @@
     @include('admin.orders.modals.amount_edit')
     @include('admin.orders.modals.datetime_edit')
     @include('admin.orders.modals.address_edit')
+
     @include('admin.orders.modals.job_status_edit')
     @include('admin.orders.modals.address_edit')
 
@@ -231,11 +232,11 @@
                             </tr>
                             <tr>
                                 <th>Photos Approved By Customer</th>
-                                <td>{{ $order->job->photos_approved ? 'Yes' : 'No' }}</td>
+                                <td>{{ optional($order->job)->photos_approved ? 'Yes' : 'No' }}</td>
                             </tr>
                             <tr>
                                 <th>Photo Comment</th>
-                                <td>{{ $order->job->photo_comment }}</td>
+                                <td>{{ optional($order->job)->photo_comment }}</td>
                             </tr>
                         @endif
 
@@ -243,7 +244,6 @@
                             <th>Payment</th>
                             <td>{{ strtoupper($order->payment_mode) }}</td>
                         </tr>
-
 
                         </tbody>
                     </table>

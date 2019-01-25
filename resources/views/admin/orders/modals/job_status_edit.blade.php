@@ -8,12 +8,12 @@
             </div>
             <div class="modal-body">
                 <select name="status" class="form-control  c-square c-border-2px c-theme">
-                    <option value="pending" {{ $order->job->status === 'pending' ? "selected" : "" }}>Pending</option>
-                    <option value="driving" {{ $order->job->status === 'driving' ? "selected" : "" }}>Driving</option>
-                    <option value="reached" {{ $order->job->status === 'reached' ? "selected" : "" }}>Reached</option>
-                    <option value="working" {{ $order->job->status === 'working' ? "selected" : "" }}>Working</option>
-                    <option value="completed" {{ $order->job->status === 'completed' ? "selected" : "" }}>Completed</option>
-                    <option value="cancelled" {{ $order->job->status === 'cancelled' ? "selected" : "" }}>Cancelled</option>
+                    <option value="pending" {{ optional($order->job)->status === 'pending' ? "selected" : "" }}>Pending</option>
+                    <option value="driving" {{ optional($order->job)->status === 'driving' ? "selected" : "" }}>Driving</option>
+                    <option value="reached" {{ optional($order->job)->status === 'reached' ? "selected" : "" }}>Reached</option>
+                    <option value="working" {{ optional($order->job)->status === 'working' ? "selected" : "" }}>Working</option>
+                    <option value="completed" {{ optional($order->job)->status === 'completed' ? "selected" : "" }}>Completed</option>
+                    <option value="cancelled" {{ optional($order->job)->status === 'cancelled' ? "selected" : "" }}>Cancelled</option>
                 </select>
             </div>
             <div class="modal-footer">

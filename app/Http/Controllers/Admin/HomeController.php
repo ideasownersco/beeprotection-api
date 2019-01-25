@@ -65,14 +65,6 @@ class HomeController extends Controller
 
         $queryDate = Carbon::parse($activeDate)->toDateString();
 
-        /**
-         * Remove after 1 Jan
-         */
-        $activeMonth = $request->date ? Carbon::parse($request->date)->format('M') : Carbon::now()->format('M');
-        if($activeMonth !== 'Dec') {
-            $queryDate = Carbon::parse($activeDate . ' 2019')->toDateString();
-        }
-
         $driversCount = $this->driverModel->count();
         $customersCount = $this->userModel->customers()->count();
         $ordersCount = $this->orderModel->success()->count();
