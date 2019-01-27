@@ -170,10 +170,10 @@ class JobsController extends Controller
         return response()->json(['success'=>true,'data'=>new OrdersResource($order)]);
     }
 
-    public function uploadPhotos($jobID)
+    public function uploadPhotos($jobID,Request $request)
     {
 
-        return response()->json(['success'=>true,'message' => 'wa']);
+//        return response()->json(['success'=>true,'message' => 'wa']);
 
         $job = $this->jobModel->find($jobID);
 
@@ -186,6 +186,7 @@ class JobsController extends Controller
         $uploadedImages = [];
 
         if(count($images)) {
+
             try {
                 foreach ($images as $image) {
                     $uploadedImage = $image.'.jpg';
