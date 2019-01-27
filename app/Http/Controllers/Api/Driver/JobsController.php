@@ -173,7 +173,6 @@ class JobsController extends Controller
 
     public function uploadPhotos($jobID,Request $request)
     {
-//        return response()->json(['success'=>true,'message' => 'wa']);
 
         $job = $this->jobModel->find($jobID);
 
@@ -189,8 +188,7 @@ class JobsController extends Controller
 
             try {
                 foreach ($images as $image) {
-                    $uploadedImage = $image.'.jpg';
-//                    $uploadedImage = $this->uploadAWSImage($image,'jobs');
+                    $uploadedImage = $this->uploadAWSImage($image,'jobs');
                     $uploadedImages[] = ['url'=>$uploadedImage];
                 }
                 $job->photos()->createMany($uploadedImages);
