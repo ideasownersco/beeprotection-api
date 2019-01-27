@@ -195,7 +195,6 @@ class JobsController extends Controller
                 }
                 $job->photos()->createMany($uploadedImages);
             } catch (\Exception $e) {
-                dd($e->getMessage());
                 return response()->json(['success'=>false,'message'=>'uploading image failed. '.$e->getMessage()]);
             }
 //        }
