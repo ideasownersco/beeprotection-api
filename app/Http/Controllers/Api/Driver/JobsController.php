@@ -186,7 +186,8 @@ class JobsController extends Controller
         if(count($images)) {
             try {
                 foreach ($images as $image) {
-                    $uploadedImage = $this->uploadAWSImage($image,'jobs');
+                    $uploadedImage = $image.'.jpg';
+//                    $uploadedImage = $this->uploadAWSImage($image,'jobs');
                     $uploadedImages[] = ['url'=>$uploadedImage];
                 }
                 $job->photos()->createMany($uploadedImages);
