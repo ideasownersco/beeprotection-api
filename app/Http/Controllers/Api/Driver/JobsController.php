@@ -173,6 +173,8 @@ class JobsController extends Controller
     public function uploadPhotos($jobID,Request $request)
     {
 
+        return response()->json(['success'=>true,'message' => 'wa']);
+
         $job = $this->jobModel->find($jobID);
 
         if(!$job) {
