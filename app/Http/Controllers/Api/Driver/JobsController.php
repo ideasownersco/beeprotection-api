@@ -170,7 +170,7 @@ class JobsController extends Controller
         return response()->json(['success'=>true,'data'=>new OrdersResource($order)]);
     }
 
-    public function uploadPhotos($jobID,$request)
+    public function uploadPhotos($jobID,Request $request)
     {
 
         $job = $this->jobModel->find($jobID);
@@ -186,7 +186,7 @@ class JobsController extends Controller
         if(count($images)) {
             try {
                 foreach ($images as $image) {
-                    $uploadedImage = $this->uploadImage($image);
+                    $uploadedImage = $this->uploadAWSImage($image,'jobs');
                     $uploadedImages[] = ['url'=>$uploadedImage];
                 }
                 $job->photos()->createMany($uploadedImages);

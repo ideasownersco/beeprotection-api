@@ -72,7 +72,8 @@ class ServicesController extends Controller
 
         if($request->hasFile('image')) {
             try {
-                $image = $this->uploadImage($request->image);
+                $image = $request->file('image')->store('services');
+//                $image = $this->uploadImage($request->image);
                 $service->image = $image;
                 $service->save();
 

@@ -52,14 +52,19 @@ class Controller extends BaseController
 
     }
 
-    protected function uploadAWSImage($image)
+    protected function uploadAWSImage($image,$folder = null)
     {
         $imageName = md5(uniqid(rand() * (time()))) . '.' . $image->getClientOriginalExtension();
+
+        if($folder) {
+            $imageName = $folder.'/'.$imageName;
+        }
+
         Storage::disk('s3')->put($imageName, file_get_contents($image), 'public');
         $image = 'beeprotection.net/'.$imageName;
-        $fullImagePath = Storage::disk('s3')->url($image);
+//        $fullImagePath = Storage::disk('s3')->url($image);
 
-        return $fullImagePath;
+        return $imageName;
     }
 
 
