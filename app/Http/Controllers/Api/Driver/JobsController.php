@@ -185,7 +185,7 @@ class JobsController extends Controller
 
         $uploadedImages = [];
 
-        if($images && count($images)) {
+        if(is_array($images) && count($images)) {
 
             try {
                 foreach ($images as $image) {
