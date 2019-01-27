@@ -193,6 +193,7 @@ class JobsController extends Controller
 //                    $uploadedImage = $this->uploadAWSImage($image,'jobs');
                     $uploadedImages[] = ['url'=>$uploadedImage];
                 }
+                dd($uploadedImages);
                 $job->photos()->createMany($uploadedImages);
             } catch (\Exception $e) {
                 return response()->json(['success'=>false,'message'=>'uploading image failed. '.$e->getMessage()]);
