@@ -185,6 +185,8 @@ class JobsController extends Controller
 
         $uploadedImages = [];
 
+        return response()->json(['success'=>false,'message' => $request->all()]);
+
 //        if(count($images)) {
 
             try {
