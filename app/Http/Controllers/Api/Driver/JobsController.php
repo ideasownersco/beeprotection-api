@@ -185,7 +185,7 @@ class JobsController extends Controller
 
         $uploadedImages = [];
 
-        if(count($images)) {
+//        if(count($images)) {
 
             try {
                 foreach ($images as $image) {
@@ -197,7 +197,7 @@ class JobsController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['success'=>false,'message'=>'uploading image failed. '.$e->getMessage()]);
             }
-        }
+//        }
 
         $order = $job->order;
         $order->load('job.photos');
