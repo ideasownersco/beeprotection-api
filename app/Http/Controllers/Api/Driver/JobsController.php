@@ -185,7 +185,6 @@ class JobsController extends Controller
 
         $uploadedImages = [];
 
-        dd($images);
 //        if(count($images)) {
 
             try {
