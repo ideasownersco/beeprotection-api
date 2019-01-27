@@ -172,7 +172,6 @@ class JobsController extends Controller
 
     public function uploadPhotos($jobID,Request $request)
     {
-
 //        return response()->json(['success'=>true,'message' => 'wa']);
 
         $job = $this->jobModel->find($jobID);
@@ -185,7 +184,7 @@ class JobsController extends Controller
 
         $uploadedImages = [];
 
-        if(is_array($images) && count($images)) {
+        if(count($images)) {
 
             try {
                 foreach ($images as $image) {
