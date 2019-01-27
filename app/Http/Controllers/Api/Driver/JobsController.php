@@ -170,7 +170,7 @@ class JobsController extends Controller
         return response()->json(['success'=>true,'data'=>new OrdersResource($order)]);
     }
 
-    public function uploadPhotos($jobID,Request $request)
+    public function uploadPhotos($jobID,$request)
     {
 //        return response()->json(['success'=>true,'message' => 'wa']);
 
