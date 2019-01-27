@@ -12,6 +12,7 @@ use App\Models\PushToken;
 use Berkayk\OneSignal\OneSignalFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Cache;
 
 class JobsController extends Controller
 {
