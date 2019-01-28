@@ -48,6 +48,9 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
     /**
      * API Authenticated Routes
      */
+
+    Route::post('driver/jobs/{id}/photos','JobsController@uploadPhotos');
+
     Route::middleware(['auth:api'])->group(function () {
 
         Route::middleware(['customer'])->prefix('customer')->namespace('Customer')->group(function () {
@@ -86,8 +89,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
          * Driver Routes
          */
 
-
-        Route::post('driver/jobs/{id}/photos','JobsController@uploadPhotos');
 
 
         Route::middleware(['driver'])->prefix('driver')->namespace('Driver')->group(function () {
