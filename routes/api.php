@@ -51,9 +51,9 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
 
     Route::post('jobs/{id}/photos','Driver\JobsController@uploadPhotos');
 
-    Route::middleware(['auth:api'])->group(function () {
+    Route::group(function () {
 
-        Route::middleware(['customer'])->prefix('customer')->namespace('Customer')->group(function () {
+        Route::prefix('customer')->namespace('Customer')->group(function () {
 
             /**
              * GET Addresses
@@ -91,7 +91,7 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
 
 
 
-        Route::middleware(['driver'])->prefix('driver')->namespace('Driver')->group(function () {
+        Route::prefix('driver')->namespace('Driver')->group(function () {
 
             Route::get('profile','ProfileController@getProfile');
             Route::post('profile/update','ProfileController@update');
