@@ -49,11 +49,11 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
      * API Authenticated Routes
      */
 
-    Route::post('jobs/{id}/photos','Driver\JobsController@uploadPhotos');
+    Route::post('driver/jobs/{id}/photos','Driver\JobsController@uploadPhotos');
 
-    Route::group(function () {
+    Route::middleware(['auth:api'])->group(function () {
 
-        Route::prefix('customer')->namespace('Customer')->group(function () {
+        Route::middleware(['customer'])->prefix('customer')->namespace('Customer')->group(function () {
 
             /**
              * GET Addresses
@@ -91,7 +91,7 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
 
 
 
-        Route::prefix('driver')->namespace('Driver')->group(function () {
+        Route::middleware(['driver'])->prefix('driver')->namespace('Driver')->group(function () {
 
             Route::get('profile','ProfileController@getProfile');
             Route::post('profile/update','ProfileController@update');
@@ -145,6 +145,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
 
 });
 
-//Route::fallback(function(){
-//    return response()->json(['success'=>false,'message' => 'Route Missing']);
-//});
+Route::fallback(function(){
+    return response()->json(['success'=>false,'message' => 'Route Missing']);
+});
