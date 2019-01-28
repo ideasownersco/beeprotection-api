@@ -87,7 +87,7 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
          */
 
 
-        Route::post('drivers/jobs/{id}/photos','JobsController@uploadPhotos');
+        Route::post('driver/jobs/{id}/photos','JobsController@uploadPhotos');
 
 
         Route::middleware(['driver'])->prefix('driver')->namespace('Driver')->group(function () {
