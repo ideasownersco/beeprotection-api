@@ -16,6 +16,7 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
     Route::post('device/uuid/register','UsersController@storeDeviceID');
     Route::post('freewash/check','UsersController@hasFreeWash');
     Route::post('freewash/set','UsersController@setFreeWash');
+    Route::post('driver/jobs/{id}/photos','Driver\JobsController@uploadPhotos');
 
     /**
      * Auth Routes
@@ -49,7 +50,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
      * API Authenticated Routes
      */
 
-    Route::post('driver/jobs/{id}/photos','Driver\JobsController@uploadPhotos');
 
     Route::middleware(['auth:api'])->group(function () {
 
@@ -88,7 +88,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
         /**
          * Driver Routes
          */
-
 
 
         Route::middleware(['driver'])->prefix('driver')->namespace('Driver')->group(function () {
