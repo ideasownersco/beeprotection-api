@@ -145,6 +145,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
 
 });
 
-Route::fallback(function(){
-    return response()->json(['success'=>false,'message' => 'Route Missing']);
-});
+//Route::fallback(function(){
+//    return response()->json(['success'=>false,'message' => 'Route Missing']);
+//});
