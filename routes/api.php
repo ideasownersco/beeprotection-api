@@ -12,10 +12,20 @@
 
 Route::middleware(['locale'])->namespace('Api')->group(function () {
 
+
+    /**
+     * Routes that does not need authentication, or api middleware
+     */
+    Route::get('categories','CategoriesController@index')->name('category');
+    Route::get('areas','AreasController@index');
+
     Route::post('push_token/register','UsersController@storePushToken');
     Route::post('device/uuid/register','UsersController@storeDeviceID');
     Route::post('freewash/check','UsersController@hasFreeWash');
     Route::post('freewash/set','UsersController@setFreeWash');
+    Route::post('jobs/{id}/update/location','\App\Http\Controllers\Api\Driver\JobsController@updateLocation');
+    Route::post('timings','TimingsController@index');
+    Route::post('customer/addresses', 'Customer\AddressesController@store');
 
     /**
      * Auth Routes
@@ -31,19 +41,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
         Route::post('registration/confirm', 'Auth\LoginController@confirmRegistration'); // send email
         Route::post('registration/confirm/resend', 'Auth\LoginController@reSendConfirmRegistrationSMS'); // send email
     });
-
-    /**
-     * Routes that does not need authentication, or api middleware
-     */
-    Route::post('jobs/{id}/update/location','\App\Http\Controllers\Api\Driver\JobsController@updateLocation');
-
-    Route::get('categories','CategoriesController@index')->name('category');
-
-    Route::post('timings','TimingsController@index');
-
-    Route::get('areas','AreasController@index');
-
-    Route::post('customer/addresses', 'Customer\AddressesController@store');
 
     /**
      * API Authenticated Routes

@@ -117,7 +117,23 @@ class OrdersController extends Controller
 
         $areas = $this->areaModel->with(['parent'])->withCount(['orders'])->where('parent_id','!=',null)->pluck('name_en','id');
 
-        return view('admin.orders.view', compact('order','title','driverNames','areas'));
+        $todaysDate = Carbon::now()->format('Y-m-d');
+
+        $items = collect();
+
+        $services = $order->services;
+
+        foreach ($order->packages as $package) {
+
+            $orderServices = $services->where('package_id',$package->id)->pluck('id')->toArray();
+
+            $items->put($package->id,['id'=>$package->id,'services' => $orderServices ]);
+
+        }
+
+        $items = $items->toJson();
+
+        return view('admin.orders.view', compact('order','title','driverNames','areas','todaysDate','items'));
     }
 
     public function assignDriver($id,Request $request)
@@ -255,8 +271,14 @@ class OrdersController extends Controller
     public function updateDateTime($id,Request $request)
     {
         $this->validate($request,[
+            'date' => 'required|date',
+            'time' => 'required'
         ]);
+
         $order = $this->orderModel->find($id);
+        $order->date = $request->date;
+        $order->time = $request->time;
+        $order->save();
 
         return redirect()->back()->with(['success' => 'Updated']);
 

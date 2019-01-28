@@ -7,6 +7,25 @@
                 <h4 class="modal-title" id="myModalLabel">Change Date & Time</h4>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Date</label>
+                    <div>
+                        <div class="input-group">
+                            <input name="date" value="{{$todaysDate}}" type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="md md-event-note"></i></span>
+                            </div>
+                        </div><!-- input-group -->
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Selected Time</label>
+                    <select class="custom-select mt-2 mb-2" name="time" id="time">
+                        <option value="">Select Time</option>
+                    </select>
+                </div>
 
             </div>
             <div class="modal-footer">

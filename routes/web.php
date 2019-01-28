@@ -6,69 +6,43 @@ use App\Models\User;
 use Carbon\Carbon;
 use IZaL\Knet\KnetBilling;
 
-Route::get('redis',function (){
-
-    $jobID = 1;
-
-    $cacheKey = 'job_id_'.$jobID;
-
-    if(!Cache::has($cacheKey)) {
-//        dd('wa');
-//        $driver->update(['latitude' => $coords['latitude'],'longitude' => $coords['longitude']]);
-        Cache::set($cacheKey,uniqid(),1);
-    }
-    dd(Cache::get($cacheKey));
-    dd('s');
-//    Cache::put('knet','KNET VALUE 1',1);
-//    dd(Cache::get('knet'));
-
-});
-
-Route::get('invalid_orders',function (){
-
-    $orders = Order::doesntHave('job')->get();
-
-    dd($orders->pluck('id')->toArray());
-
-});
-
-Route::get('activate_users',function(){
-
-    $time = Carbon::now()->subMinutes(10)->toDateTimeString();
-
-    $users = User::
-    where('active',0)
-        ->where('created_at','<',$time)
-        ->take(10)
-        ->get()
-    ;
-
-
-    foreach ($users as $user) {
-        $password = rand(10000000,99999999);
-        $user->active = 1;
-        $user->password = bcrypt($password);
-        $user->save();
-
-        if(app()->env === 'production') {
-            try {
-                event(new UserActivated($user,$password));
-            } catch (\Exception $e) {
-                $user->active = 0;
-                $user->save();
-            }
-        }
-    }
-
-    $inactiveUsers = User::where('active',0)
-        ->whereDate('created_at','<',$time)
-        ->take(10)
-        ->count()
-    ;
-
-    dd($inactiveUsers);
-
-});
+//Route::get('activate_users',function(){
+//
+//    $time = Carbon::now()->subMinutes(10)->toDateTimeString();
+//
+//    $users = User::
+//    where('active',0)
+//        ->where('created_at','<',$time)
+//        ->take(10)
+//        ->get()
+//    ;
+//
+//
+//    foreach ($users as $user) {
+//        $password = rand(10000000,99999999);
+//        $user->active = 1;
+//        $user->password = bcrypt($password);
+//        $user->save();
+//
+//        if(app()->env === 'production') {
+//            try {
+//                event(new UserActivated($user,$password));
+//            } catch (\Exception $e) {
+//                $user->active = 0;
+//                $user->save();
+//            }
+//        }
+//    }
+//
+//    $inactiveUsers = User::where('active',0)
+//        ->whereDate('created_at','<',$time)
+//        ->take(10)
+//        ->count()
+//    ;
+//
+//    dd($inactiveUsers);
+//
+//});
 
 //Route::get('latlng',function() {
 //
@@ -94,97 +68,31 @@ Route::get('activate_users',function(){
 //});
 
 
-Route::get('purge_jobs',function() {
-
-    $jobs = \App\Models\Job::doesntHave('order')->get();
-
-    foreach ($jobs as $job) {
-        $job->delete();
-    }
-
-    $jobs = \App\Models\Job::doesntHave('order')->count();
-
-    dd($jobs);
-});
-
-Route::get('purge_blocked_dates',function (){
-
-    $date = \Carbon\Carbon::yesterday()->toDateString();
-
-    $dates = \App\Models\BlockedDate::where('date','<=',$date)->paginate(100);
-
-    foreach ($dates as $date) {
-        $date->delete();
-    }
-
-    $dates = \App\Models\BlockedDate::where('date','<=',$date)->count();
-
-    dd($dates);
-});
-Route::get('purge_job_counts',function (){
-
-    $date = \Carbon\Carbon::yesterday()->toDateString();
-
-    $dates = \App\Models\JobCount::where('date','<=',$date)->paginate(100);
-
-    foreach ($dates as $date) {
-        $date->delete();
-    }
-
-    $dates = \App\Models\JobCount::where('date','<=',$date)->count();
-
-    dd($dates);
-});
-
-Route::get('delete_old_orders',function() {
-//    $date = \Carbon\Carbon::yesterday()->toDateString();
-    $orders = Order::whereDate('date','<','2019-01-15')->paginate(200);
-
-    foreach ($orders as $order) {
-
-        if($order->job) {
-            $order->job()->delete();
-        }
-
-        if($order->packages->count()) {
-            $order->packages()->sync([]);
-        }
-
-        if($order->services->count()) {
-            $order->services()->sync([]);
-        }
-
-        $order->delete();
-    }
-//    $orders = Order::where('status','!=','success')->whereDate('created_at','<=',$date)->count();
-    dd($orders->count());
-});
+//Route::post('knet-pay',function () {
+//    $order = \App\Models\Order::first();
+//    $successURL = route('payment.knet.response.success');
+//    $errorURL = route('payment.knet.error');
+//    $knetAlias = env('KNET_ALIAS');
+//    try {
+//        $knetGateway = new KnetBilling([
+//            'alias'        => $knetAlias,
+//            'resourcePath' => base_path() . '/'
+//        ]);
+//        $knetGateway->setResponseURL($successURL);
+//        $knetGateway->setErrorURL($errorURL);
+//        $knetGateway->setAmt($order->total);
+//        $knetGateway->setTrackId($order->id);
+//        $knetGateway->requestPayment();
+//        $paymentURL = $knetGateway->getPaymentURL();
+//        $order->payment_id = $knetGateway->getPaymentID();
+//        $order->save();
+//        return redirect()->away($paymentURL);
+//    } catch (\Exception $e) {
+//        return response()->json(['success'=>false,'error', 'حدث خلل اثناء التحويل الي موقع الدفع']);
+//    }
+//});
 
 Auth::routes();
-
-Route::post('knet-pay',function () {
-    $order = \App\Models\Order::first();
-    $successURL = route('payment.knet.response.success');
-    $errorURL = route('payment.knet.error');
-    $knetAlias = env('KNET_ALIAS');
-    try {
-        $knetGateway = new KnetBilling([
-            'alias'        => $knetAlias,
-            'resourcePath' => base_path() . '/'
-        ]);
-        $knetGateway->setResponseURL($successURL);
-        $knetGateway->setErrorURL($errorURL);
-        $knetGateway->setAmt($order->total);
-        $knetGateway->setTrackId($order->id);
-        $knetGateway->requestPayment();
-        $paymentURL = $knetGateway->getPaymentURL();
-        $order->payment_id = $knetGateway->getPaymentID();
-        $order->save();
-        return redirect()->away($paymentURL);
-    } catch (\Exception $e) {
-        return response()->json(['success'=>false,'error', 'حدث خلل اثناء التحويل الي موقع الدفع']);
-    }
-});
 
 Route::get('logout',function(){
     Auth::logout();

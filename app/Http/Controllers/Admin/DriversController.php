@@ -242,7 +242,6 @@ class DriversController extends Controller
 
     public function assignHoliday(Request $request)
     {
-
         $this->validate($request,[
             'driver_id'     => 'required',
             'date' => 'required|date',
@@ -257,8 +256,11 @@ class DriversController extends Controller
         $params = [];
         $params['order_id'] = 1;
         $params['date'] = $date;
+        $params['from'] = Carbon::parse($request->from)->toTimeString();
+        $params['to'] = Carbon::parse($request->to)->toTimeString();
+        $params['date'] = $date;
 
-        $driver->blocked_dates()->create(array_merge($request->except('date'),$params));
+        $driver->blocked_dates()->create(array_merge($request->except('date','from','to'),$params));
 
         return redirect()->back()->with('success','Saved');
 

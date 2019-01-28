@@ -7,12 +7,15 @@
 
 @section('scripts')
     @parent
+    <script src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="/plugins/timepicker/bootstrap-timepicker.js"></script>
     <script src="https://maps.google.com/maps/api/js?key=AIzaSyCpQX4H0QPxVgKuNMZ0ELG_ymgT8RHcKh4"></script>
     <script src="/plugins/gmaps/gmaps.min.js"></script>
 
     <script>
       $(document).ready(function() {
+
+
         $('#start_time').timepicker({
           defaultTIme: false,
           icons: {
@@ -36,24 +39,24 @@
       var lat = {!! $order->address ? $order->address->latitude : '29.3772392006689' !!}
       var lng = {!! $order->address ? $order->address->longitude : '47.98511826155676' !!}
 
-      GoogleMap.prototype.createMarkers = function($container) {
-        var map = new GMaps({
-          div: $container,
-          lat: lat,
-          lng: lng
-        });
-        map.addMarker({
-          lat: lat,
-          lng: lng,
-          draggable: true,
-          dragend: function(event) {
-            // var lat = event.latLng.lat();
-            // var lng = event.latLng.lng();
-            $('#latitude').val(event.latLng.lat());
-            $('#longitude').val(event.latLng.lng());
-          },
-        });
-      };
+          GoogleMap.prototype.createMarkers = function($container) {
+          var map = new GMaps({
+            div: $container,
+            lat: lat,
+            lng: lng
+          });
+          map.addMarker({
+            lat: lat,
+            lng: lng,
+            draggable: true,
+            dragend: function(event) {
+              // var lat = event.latLng.lat();
+              // var lng = event.latLng.lng();
+              $('#latitude').val(event.latLng.lat());
+              $('#longitude').val(event.latLng.lng());
+            },
+          });
+        };
       GoogleMap.prototype.init = function() {
         var $this = this;
         $(document).ready(function(){
@@ -65,6 +68,57 @@
         $.GoogleMap = new GoogleMap;
         $.GoogleMap.init();
       });
+
+      function getTimings(date) {
+
+        var payload = {
+          date: date,
+          items: {!! $items !!}
+        };
+
+        var deferred = new $.Deferred();
+
+        $.post("/api/timings",payload, function(res){
+          if(res.success) {
+            deferred.resolve(res.data);
+            // cb(res.data);
+          } else {
+            deferred.reject('error');
+          }
+        });
+
+        return deferred.promise();
+      }
+
+
+      $('#datetime-edit-modal').on('shown.bs.modal', function (e) {
+
+        $('#datepicker').datepicker({
+          format:'yyyy-mm-dd',
+          autoclose: true,
+          todayHighlight: true
+        });
+
+        var date = $('#datepicker').val();
+
+        getTimings(date).then(function(data) {
+          $.each(data, function (i, item) {
+
+            if(!item.disabled) {
+              $('#time').append($('<option>', {
+                value: item.name_en,
+                text : item.name_en
+              }));
+            }
+
+          });
+        });
+
+      });
+
+
+      // $('#datetime-edit-modal').modal('show');
+
 
     </script>
 
@@ -142,7 +196,7 @@
                             <th>Wash Types
                                 {{--<br>--}}
                                 {{--<a href="#" data-toggle="modal" data-target="#type-edit-modal">--}}
-                                    {{--Edit--}}
+                                {{--Edit--}}
                                 {{--</a>--}}
                             </th>
 
@@ -178,10 +232,10 @@
                         </tr>
                         <tr>
                             <th>Date
-                                {{--<br>--}}
-                                {{--<a href="#" data-toggle="modal" data-target="#datetime-edit-modal">--}}
-                                    {{--Edit--}}
-                                {{--</a>--}}
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#datetime-edit-modal">
+                                    Edit
+                                </a>
                             </th>
                             <td>{{ $order->scheduled_time}} - {{ $order->time_to }}</td>
                         </tr>
