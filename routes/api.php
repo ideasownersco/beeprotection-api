@@ -86,6 +86,10 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
          * Driver Routes
          */
 
+
+        Route::post('drivers/jobs/{id}/photos','JobsController@uploadPhotos');
+
+
         Route::middleware(['driver'])->prefix('driver')->namespace('Driver')->group(function () {
 
             Route::get('profile','ProfileController@getProfile');
@@ -103,7 +107,6 @@ Route::middleware(['locale'])->namespace('Api')->group(function () {
             Route::post('jobs/{id}/stop/drive','JobsController@stopDriving');
             Route::post('jobs/{id}/start/work','JobsController@startWorking');
             Route::post('jobs/{id}/stop/work','JobsController@stopWorking');
-            Route::post('jobs/{id}/photos','JobsController@uploadPhotos');
             Route::post('jobs/{id}/photos/approve','JobsController@approvePhotos');
         });
         /**
