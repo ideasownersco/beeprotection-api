@@ -15,7 +15,6 @@
     <script>
       $(document).ready(function() {
 
-
         $('#start_time').timepicker({
           defaultTIme: false,
           icons: {
@@ -71,24 +70,54 @@
 
       function getTimings(date) {
 
+        $('#time').empty();
+
         var payload = {
           date: date,
           items: {!! $items !!}
         };
 
-        var deferred = new $.Deferred();
-
         $.post("/api/timings",payload, function(res){
           if(res.success) {
-            deferred.resolve(res.data);
+            // deferred.resolve(res.data);
+              $.each(res.data, function (i, item) {
+
+                console.log('i',item.disabled);
+
+                if(!item.disabled) {
+                  $('#time').append($('<option>', {
+                    value: item.name_en,
+                    text : item.name_en
+                  }));
+                }
+
+              });
+
             // cb(res.data);
           } else {
-            deferred.reject('error');
           }
         });
-
-        return deferred.promise();
       }
+      {{--function getTimings(date) {--}}
+
+        {{--var payload = {--}}
+          {{--date: date,--}}
+          {{--items: {!! $items !!}--}}
+        {{--};--}}
+
+        {{--var deferred = new $.Deferred();--}}
+
+        {{--$.post("/api/timings",payload, function(res){--}}
+          {{--if(res.success) {--}}
+            {{--deferred.resolve(res.data);--}}
+            {{--// cb(res.data);--}}
+          {{--} else {--}}
+            {{--deferred.reject('error');--}}
+          {{--}--}}
+        {{--});--}}
+
+        {{--return deferred.promise();--}}
+      {{--}--}}
 
 
       $('#datetime-edit-modal').on('shown.bs.modal', function (e) {
@@ -96,29 +125,19 @@
         $('#datepicker').datepicker({
           format:'yyyy-mm-dd',
           autoclose: true,
-          todayHighlight: true
+          todayHighlight: true,
         });
 
         var date = $('#datepicker').val();
 
-        getTimings(date).then(function(data) {
-          $.each(data, function (i, item) {
-
-            if(!item.disabled) {
-              $('#time').append($('<option>', {
-                value: item.name_en,
-                text : item.name_en
-              }));
-            }
-
-          });
-        });
+        getTimings(date);
 
       });
 
-
+      // $('date').on('change', function() {
+      //   alert( this.value );
+      // });
       // $('#datetime-edit-modal').modal('show');
-
 
     </script>
 

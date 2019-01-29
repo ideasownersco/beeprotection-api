@@ -11,7 +11,7 @@
                     <label>Select Date</label>
                     <div>
                         <div class="input-group">
-                            <input name="date" value="{{$todaysDate}}" type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker" autocomplete="off">
+                            <input onChange="getTimings($(this).val());" name="date" value="{{$todaysDate}}" type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker" autocomplete="off">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="md md-event-note"></i></span>
                             </div>
